@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Platform, UIManager, LayoutAnimation, Animated, StyleSheet, Button } from 'react-native';
 import PropTypes from 'prop-types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ContinueToAppButton = ({ activeDotIndex }) => {
+const ContinueToAppButton = ({ activeDotIndex, onPress }) => {
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
@@ -34,13 +35,14 @@ const ContinueToAppButton = ({ activeDotIndex }) => {
 
   return (
     <Animated.View style={styles.continueToAppButton}>
-      {expanded && <Button color="#defc5f" title="Continue to app" />}
+      {expanded && <Button onPress={() => { onPress(false); AsyncStorage.setItem('@alreadyLaunched', 'true') }} color="#defc5f" title="Continue to app" />}
     </Animated.View>
   );
 };
 
 ContinueToAppButton.propTypes = {
   activeDotIndex: PropTypes.number.isRequired,
+  onPress: PropTypes.func.isRequired,
 };
 
 export default ContinueToAppButton;

@@ -24,6 +24,7 @@ const handleSubmit = (
     body: JSON.stringify({ username, password }),
     credentials: 'include',
   };
+  console.log('logging in')
 
   fetch(`${baseUrl}/login`, requestOptions).then((res) => {
     if (res.status === 200) {

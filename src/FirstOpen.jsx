@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
+import PropTypes from 'prop-types';
 import ContinueToAppButton from './ContinueToAppButton';
 
-const FirstOpen = () => {
+const FirstOpen = ({ setFirstOpenVisible }) => {
   const [activeDotIndex, setActiveDotIndex] = useState(0);
   const [componentLoaded, setComponentLoaded] = useState(false);
 
@@ -18,7 +19,6 @@ const FirstOpen = () => {
       backgroundColor: '#defc5f',
       flex: 1,
       padding: 40,
-      marginBottom: 30,
       margin: 30,
       borderRadius: 40,
       paddingTop: 70,
@@ -59,7 +59,7 @@ const FirstOpen = () => {
   );
 
   return (
-    <View style={{ backgroundColor: 'black' }}>
+    <View style={{ backgroundColor: 'black', height: '100%' }}>
       <Carousel
         data={carouselItems}
         renderItem={renderItem}
@@ -67,9 +67,14 @@ const FirstOpen = () => {
         itemWidth={screenWidth}
         onSnapToItem={setActiveDotIndex}
       />
-      {componentLoaded && <ContinueToAppButton activeDotIndex={activeDotIndex} />}
+      {componentLoaded
+      && <ContinueToAppButton onPress={setFirstOpenVisible} activeDotIndex={activeDotIndex} />}
     </View>
   );
+};
+
+FirstOpen.propTypes = {
+  setFirstOpenVisible: PropTypes.func.isRequired,
 };
 
 export default FirstOpen;
