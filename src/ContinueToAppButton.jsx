@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Platform, UIManager, LayoutAnimation, Animated, StyleSheet, Button } from 'react-native';
+import PropTypes from 'prop-types';
 
 const ContinueToAppButton = ({ activeDotIndex }) => {
   const [expanded, setExpanded] = useState(false);
@@ -36,6 +37,10 @@ const ContinueToAppButton = ({ activeDotIndex }) => {
       {expanded && <Button color="#defc5f" title="Continue to app" />}
     </Animated.View>
   );
+};
+
+ContinueToAppButton.propTypes = {
+  activeDotIndex: PropTypes.number.isRequired,
 };
 
 export default ContinueToAppButton;
