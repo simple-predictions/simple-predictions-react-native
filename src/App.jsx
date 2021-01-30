@@ -12,6 +12,7 @@ import FirstOpen from './FirstOpen';
 import Login from './Login';
 import LoggedInNav from './LoggedInNav';
 import { getPredictions } from './Predictions/predictionsSlice';
+import { getMinileagues } from './MiniLeagues/minileaguesSlice';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ const App = () => {
 
   if (loggedIn) {
     dispatch(getPredictions());
+    dispatch(getMinileagues());
   } else {
     dispatch(getUserInfo());
   }
@@ -36,7 +38,7 @@ const App = () => {
         setFirstOpenVisible(true);
       }
     });
-  });
+  }, []);
 
   return (
     <View style={{ height: '100%', width: '100%' }}>

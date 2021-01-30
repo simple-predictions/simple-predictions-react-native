@@ -35,7 +35,7 @@ const ContinueToAppButton = ({ activeDotIndex, onPress }) => {
 
   return (
     <Animated.View style={styles.continueToAppButton}>
-      {expanded && <Button onPress={() => { onPress(false); AsyncStorage.setItem('@alreadyLaunched', 'true') }} color="#defc5f" title="Continue to app" />}
+      {expanded && <Button onPress={() => { onPress(false); AsyncStorage.setItem('@alreadyLaunched', 'true'); }} color="#defc5f" title="Continue to app" />}
     </Animated.View>
   );
 };
