@@ -160,7 +160,7 @@ const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
     // eslint-disable-next-line no-underscore-dangle
     <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }} className="outer-container" key={match._id}>
       <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }} className="home-team-container">
-        <Image alt="home club badge" className="club-badge" style={{ height: 50, width: 50 }} source={Badges[match.home_team.replace(/\s+/g, '')]} />
+        <Image alt="home club badge" className="club-badge" style={{ height: 50, width: 50, resizeMode: 'contain' }} source={Badges[match.home_team.replace(/\s+/g, '')]} />
         <View style={styles.predictionCircle} />
       </View>
       <View style={styles.scoreContainer}>
@@ -194,7 +194,7 @@ const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
         </View>
       </View>
       <View style={{flex:2, justifyContent: 'center', alignItems: 'center'}} className="away-team-container">
-        <Image alt="away club badge" className="club-badge" style={{ height: 50, width: 50 }} source={Badges[match.away_team.replace(/\s+/g, '')]} />
+        <Image alt="away club badge" className="club-badge" style={{ height: 50, width: 50, resizeMode: 'contain' }} source={Badges[match.away_team.replace(/\s+/g, '')]} />
         <View style={styles.predictionCircle} />
       </View>
     </View>
