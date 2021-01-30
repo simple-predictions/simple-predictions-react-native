@@ -19,7 +19,7 @@ const LoggedInNav = () => {
           options={{
             tabBarIcon: ({ color, size }) => (
               <Image style={{ height: size, width: size, tintColor: color }} source={questionMark} />
-            ),
+            )
           }}
           name="Predictions"
           component={Predictions}
@@ -30,7 +30,7 @@ const LoggedInNav = () => {
           options={{
             tabBarIcon: ({ color, size }) => (
               <Image style={{ height: size, width: size, tintColor: color }} source={trophy} />
-            ),
+            )
           }}
         />
         <Tab.Screen

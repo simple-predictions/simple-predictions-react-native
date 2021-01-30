@@ -2,8 +2,6 @@ import baseUrl from '../globals';
 
 const handleSubmit = (formData, setSubmitEnabled, setSuccessMessage, successCount, setSuccessCount) => {
   // setSubmitEnabled(false);
-  console.log(formData);
-  
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

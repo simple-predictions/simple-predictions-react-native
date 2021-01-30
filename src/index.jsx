@@ -22,10 +22,10 @@ function index() {
   AsyncStorage.clear();
   return (
     <Provider store={store}>
-        <View style={styles.container}>
-          <App />
-          <StatusBar />
-        </View>
+      <View style={styles.container}>
+        <App />
+        <StatusBar hidden />
+      </View>
     </Provider>
   );
 }

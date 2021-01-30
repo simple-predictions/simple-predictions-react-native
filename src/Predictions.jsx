@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Text, TouchableHighlight, View, Button, TextInput, Image, ScrollView, StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Icon } from 'react-native-elements';
 import Badges from './ImageLoader';
 import handleSubmit from './Logic/PredictionsLogic';
-import { selectUserPredictions, selectUserPredictionsGameweek, selectUserPredictionsStatus } from './Predictions/predictionsSlice';
+import { selectUserPredictions, selectUserPredictionsGameweek, selectUserPredictionsStatus, getPredictions } from './Predictions/predictionsSlice';
+import Dollar from '../assets/dollar.png';
+import Padlock from '../assets/padlock.png';
 
 const Predictions = () => {
   const userPredictions = useSelector(selectUserPredictions);
@@ -24,19 +27,26 @@ const Predictions = () => {
         home_pred: match.user_predictions[0].home_pred,
         away_pred: match.user_predictions[0].away_pred,
         game_id: match._id,
+        banker: match.user_predictions[0].banker || false,
+        insurance: match.user_predictions[0].insurance || false,
       }
     ));
     setFormData(userPredsSimple);
-  }, []);
+  }, [userPredictions]);
 
   const updateFormData = (matchID, team, score) => {
     const newData = [...formData];
     const idx = formData.findIndex((match) => matchID === match.game_id);
-    newData[idx][`${team}_pred`] = score;
+    if (team === 'banker') {
+      newData[idx].banker = score;
+    } else if (team === 'insurance') {
+      newData[idx].insurance = score;
+    } else {
+      newData[idx][`${team}_pred`] = score;
+    }
+    console.log(newData[idx])
     setFormData(newData);
-    console.log(formData[idx])
-  }
-
+  };
 
   if (gameweek && selectorDisabled && status !== 'pending') {
     setSelectorDisabled(false);
@@ -46,8 +56,18 @@ const Predictions = () => {
     setSelectorDisabled(true);
   }
 
+  const styles = StyleSheet.create({
+    arrowButtonDisabled: {
+      backgroundColor: 'transparent',
+    },
+    gameweekText: {
+      fontFamily: 'Montserrat-400',
+      fontSize: 20,
+    }
+  });
+
   return (
-    <ScrollView className="m-0 row">
+    <ScrollView style={{ backgroundColor: '#323232' }}>
       {/* successMessage && (
       <Alert variant="success" dismissible onClose={() => setSuccessMessage('')}>
         {`${successMessage} - `}
@@ -62,6 +82,11 @@ const Predictions = () => {
         onValueUpdate={(e) => dispatch(getPredictions(e.target.value))}
         startingValue={gameweek}
       /> */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+        <Icon color={selectorDisabled ? 'gray' : 'white'} disabledStyle={styles.arrowButtonDisabled} name="arrow-left" size={50} disabled={!!selectorDisabled} onPress={() => dispatch(getPredictions(gameweek - 1))} />
+        <Text style={[styles.gameweekText, { color: selectorDisabled ? 'gray' : 'white' }]}>{`Gameweek ${gameweek}`}</Text>
+        <Icon color={selectorDisabled ? 'gray' : 'white'} disabledStyle={styles.arrowButtonDisabled} name="arrow-right" size={50} disabled={!!selectorDisabled} onPress={() => dispatch(getPredictions(gameweek + 1))} />
+      </View>
       <View className="col-lg-8 right-col">
         {userPredictions.map((match) => {
           const kickOffTime = new Date(match.kick_off_time);
@@ -98,14 +123,31 @@ const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
 
   const styles = StyleSheet.create({
     predInput: {
-      height: 50,
-      width: 50,
+      height: 40,
+      width: 40,
       textAlign: 'center',
       borderColor: 'black',
       borderWidth: 1,
       borderRadius: 10,
       margin: 5,
-      fontSize: 20,
+      fontSize: 18,
+      backgroundColor: 'white',
+    },
+    predictionCircle: {
+      width: 70,
+      height: 70,
+      borderRadius: 50,
+      backgroundColor: '#defc5f',
+      position: 'absolute',
+      zIndex: -1,
+    },
+    scoreContainer: {
+      flex: 3,
+      justifyContent: 'center',
+      backgroundColor: '#defc5f',
+      borderRadius: 10,
+      marginRight: 10,
+      marginLeft: 10,
     },
   });
 
@@ -117,13 +159,13 @@ const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
   return (
     // eslint-disable-next-line no-underscore-dangle
     <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }} className="outer-container" key={match._id}>
-      <View style={{flex: 2, justifyContent: 'center', alignItems: 'center'}} className="home-team-container">
-        <Image alt="home club badge" className="club-badge" style={{ height: 70, width: 70 }} source={Badges[match.home_team.replace(/\s+/g, '')]} />
-        <View className="prediction-circle" />
+      <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }} className="home-team-container">
+        <Image alt="home club badge" className="club-badge" style={{ height: 50, width: 50 }} source={Badges[match.home_team.replace(/\s+/g, '')]} />
+        <View style={styles.predictionCircle} />
       </View>
-      <View style={{flex: 3, justifyContent: 'center'}} className="score-container">
-        <View className="kick-off-time-container">
-          <Text style={{textAlign: 'center'}}>
+      <View style={styles.scoreContainer}>
+        <View style={{ marginTop: 10 }}>
+          <Text style={{ textAlign: 'center' }}>
             {kickOffTime.getDate()}
             {' '}
             {month[kickOffTime.getMonth()]}
@@ -135,27 +177,25 @@ const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
           {/* eslint-disable-next-line no-underscore-dangle */}
-          <TextInput style={styles.predInput} keyboardType="number-pad" disabled={!!match.locked} name={`${match._id}[home-pred]`} value={homePred} onChangeText={(text) => {setHomePred(text); updateFormData(match._id, 'home', text)}} />
+          <TextInput style={[styles.predInput, { backgroundColor: match.locked ? '#C5D6CF' : 'white' }]} keyboardType="number-pad" editable={!match.locked} value={homePred} onChangeText={(text) => { setHomePred(text); updateFormData(match._id, 'home', text); }} />
           <Text>-</Text>
           {/* eslint-disable-next-line no-underscore-dangle */}
-          <TextInput style={styles.predInput} keyboardType="number-pad" disabled={!!match.locked} name={`${match._id}[away-pred]`} value={awayPred} onChangeText={(text) => {setAwayPred(text); updateFormData(match._id, 'away', text)}} />
+          <TextInput style={[styles.predInput, { backgroundColor: match.locked ? '#C5D6CF' : 'white' }]} keyboardType="number-pad" editable={!match.locked} value={awayPred} onChangeText={(text) => { setAwayPred(text); updateFormData(match._id, 'away', text); }} />
         </View>
-        <View className="chips-container">
-          <TouchableHighlight disabled={!!match.locked} type="button" style={{ opacity: bankerEnabled ? 1 : 0.3 }} className="chip-icon-button" onClick={() => setBankerEnabled(!bankerEnabled)}>
-          {/* <Image className="chip-icon" alt="dollar icon" src="/icons/dollar.png" height={30} /> */}
-          <Text>TEST1</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 10, marginTop: 5 }}>
+          {/* eslint-disable-next-line no-underscore-dangle */}
+          <TouchableHighlight disabled={!!match.locked} type="button" style={{ opacity: bankerEnabled ? 1 : 0.3, height: 30, width: 30 }} onPress={() => { updateFormData(match._id, 'banker', !bankerEnabled); setBankerEnabled(!bankerEnabled); }}>
+            <Image style={{ height: 30, width: 30 }} source={Dollar} />
           </TouchableHighlight>
           {/* eslint-disable-next-line no-underscore-dangle */}
-          <TouchableHighlight disabled={!!match.locked} type="button" style={{ opacity: insuranceEnabled ? 1 : 0.3 }} className="chip-icon-button" onClick={() => setInsuranceEnabled(!insuranceEnabled)}>
-          {/* <Image className="chip-icon" alt="padlock icon" src="/icons/padlock.png" height={30} /> */}
-          <Text>TEST2</Text>
+          <TouchableHighlight disabled={!!match.locked} type="button" style={{ opacity: insuranceEnabled ? 1 : 0.3, height: 30, width: 30 }} onPress={() => { updateFormData(match._id, 'insurance', !insuranceEnabled); setInsuranceEnabled(!insuranceEnabled); }}>
+            <Image style={{ height: 30, width: 30 }} source={Padlock} />
           </TouchableHighlight>
-          {/* eslint-disable-next-line no-underscore-dangle */}
         </View>
       </View>
       <View style={{flex:2, justifyContent: 'center', alignItems: 'center'}} className="away-team-container">
-        <Image alt="away club badge" className="club-badge" style={{height:70, width: 70}} source={Badges[match.away_team.replace(/\s+/g, '')]} />
-        <View className="prediction-circle" />
+        <Image alt="away club badge" className="club-badge" style={{ height: 50, width: 50 }} source={Badges[match.away_team.replace(/\s+/g, '')]} />
+        <View style={styles.predictionCircle} />
       </View>
     </View>
   );
