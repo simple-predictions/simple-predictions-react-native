@@ -66,7 +66,7 @@ const Predictions = () => {
     },
     gameweekText: {
       fontFamily: 'Montserrat-400',
-      fontSize: 20,
+      fontSize: 25,
     },
   });
 
@@ -89,7 +89,10 @@ const Predictions = () => {
         onValueUpdate={(e) => dispatch(getPredictions(e.target.value))}
         startingValue={gameweek}
       /> */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{
+        flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 20, marginTop: 10,
+      }}
+      >
         <Icon color={selectorDisabled ? 'gray' : 'white'} disabledStyle={styles.arrowButtonDisabled} name="arrow-left" size={50} disabled={!!selectorDisabled} onPress={() => dispatch(getPredictions(gameweek - 1))} />
         <Text style={[styles.gameweekText, { color: selectorDisabled ? 'gray' : 'white' }]}>{`Gameweek ${gameweek}`}</Text>
         <Icon color={selectorDisabled ? 'gray' : 'white'} disabledStyle={styles.arrowButtonDisabled} name="arrow-right" size={50} disabled={!!selectorDisabled} onPress={() => dispatch(getPredictions(gameweek + 1))} />
@@ -165,7 +168,7 @@ const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
 
   return (
     // eslint-disable-next-line no-underscore-dangle
-    <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }} className="outer-container" key={match._id}>
+    <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 50 }} className="outer-container" key={match._id}>
       <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }} className="home-team-container">
         <Image alt="home club badge" className="club-badge" style={{ height: 50, width: 50, resizeMode: 'contain' }} source={Badges[match.home_team.replace(/\s+/g, '')]} />
         <View style={styles.predictionCircle} />

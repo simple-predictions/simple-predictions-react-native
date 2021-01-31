@@ -13,6 +13,7 @@ import Login from './Login';
 import LoggedInNav from './LoggedInNav';
 import { getPredictions } from './Predictions/predictionsSlice';
 import { getMinileagues } from './MiniLeagues/minileaguesSlice';
+import { getScoredPreds } from './Scoring/scoringSlice';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const App = () => {
   if (loggedIn) {
     dispatch(getPredictions());
     dispatch(getMinileagues());
+    dispatch(getScoredPreds(['solly', 21]));
   } else {
     dispatch(getUserInfo());
   }

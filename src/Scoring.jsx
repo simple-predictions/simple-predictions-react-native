@@ -5,6 +5,7 @@ import { selectScoredMatches } from './Scoring/scoringSlice';
 
 const Scoring = () => {
   const matches = useSelector(selectScoredMatches);
+
   return (
     matches.length > 0 ? (
       <View>

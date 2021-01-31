@@ -25,12 +25,15 @@ const Login = () => {
 
   return (
     <View style={{ backgroundColor: '#defc5f', flex: 1, justifyContent: 'center' }}>
-      <Text style={{
-        color: '#721c24', borderColor: '#f5c6cb', backgroundColor: '#f8d7da', padding: 10, margin: 10,
-      }}
-      >
-        {`${errorMessage} - (${errorCount})`}
-      </Text>
+      {errorMessage
+        ? (
+          <Text style={{
+            color: '#721c24', borderColor: '#f5c6cb', backgroundColor: '#f8d7da', padding: 10, margin: 10,
+          }}
+          >
+            {`${errorMessage} - (${errorCount})`}
+          </Text>
+        ) : null}
       <View style={{ padding: 60 }}>
         <Text style={{ textAlign: 'center', fontFamily: 'Montserrat-400', fontSize: 30 }}>Please log in</Text>
         <TextInput style={styles.formInput} value={username} onChangeText={(e) => setUsername(e)} />
