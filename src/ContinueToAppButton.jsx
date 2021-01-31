@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, UIManager, LayoutAnimation, Animated, StyleSheet, Button } from 'react-native';
+import {
+  Platform,
+  UIManager,
+  LayoutAnimation,
+  Animated,
+  StyleSheet,
+  Button,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

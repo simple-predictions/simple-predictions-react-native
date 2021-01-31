@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Text, TouchableHighlight, View, Button, TextInput, Image, ScrollView, StyleSheet } from 'react-native';
+import {
+  Text, TouchableHighlight, View, Button, TextInput, Image, ScrollView, StyleSheet,
+} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Icon } from 'react-native-elements';
 import Badges from './ImageLoader';
 import handleSubmit from './Logic/PredictionsLogic';
-import { selectUserPredictions, selectUserPredictionsGameweek, selectUserPredictionsStatus, getPredictions } from './Predictions/predictionsSlice';
+import {
+  selectUserPredictions, selectUserPredictionsGameweek, selectUserPredictionsStatus, getPredictions,
+} from './Predictions/predictionsSlice';
 import Dollar from '../assets/dollar.png';
 import Padlock from '../assets/padlock.png';
-import { getFontSize } from './globals';
 
 const Predictions = () => {
   const userPredictions = useSelector(selectUserPredictions);
@@ -27,6 +30,7 @@ const Predictions = () => {
       {
         home_pred: match.user_predictions[0].home_pred,
         away_pred: match.user_predictions[0].away_pred,
+        // eslint-disable-next-line no-underscore-dangle
         game_id: match._id,
         banker: match.user_predictions[0].banker || false,
         insurance: match.user_predictions[0].insurance || false,
@@ -45,7 +49,6 @@ const Predictions = () => {
     } else {
       newData[idx][`${team}_pred`] = score;
     }
-    console.log(newData[idx])
     setFormData(newData);
   };
 
@@ -64,19 +67,22 @@ const Predictions = () => {
     gameweekText: {
       fontFamily: 'Montserrat-400',
       fontSize: 20,
-    }
+    },
   });
 
   return (
     <ScrollView style={{ backgroundColor: '#323232' }}>
-      {/* successMessage && (
-      <Alert variant="success" dismissible onClose={() => setSuccessMessage('')}>
+      { successMessage && (
+      <Text
+        style={{
+          color: '#721c24', borderColor: '#f5c6cb', backgroundColor: '#f8d7da', padding: 10, margin: 10,
+        }}
+        onClose={() => setSuccessMessage('')}
+      >
         {`${successMessage} - `}
-        <strong>
           {`${successCount} attempt(s)`}
-        </strong>
-      </Alert>
-      ) */}
+      </Text>
+      )}
       {/* <DropdownSelector
         enabled={selectorDisabled}
         length={38}
@@ -91,17 +97,17 @@ const Predictions = () => {
       <View className="col-lg-8 right-col">
         {userPredictions.map((match) => {
           const kickOffTime = new Date(match.kick_off_time);
-          // eslint-disable-next-line no-underscore-dangle
           return (
             <PredictionRow
               updateFormData={updateFormData}
+              // eslint-disable-next-line no-underscore-dangle
               key={match._id}
               kickOffTime={kickOffTime}
               match={match}
             />
           );
         })}
-        <Button title="Submit" disabled={!submitEnabled} onPress={() => handleSubmit(formData)} className="predictions-form-submit-button predictions-form-submit-button-mobile" type="submit" value="Submit" form="predictions-form" />
+        <Button title="Submit" disabled={!submitEnabled} onPress={() => handleSubmit(formData, setSubmitEnabled, setSuccessMessage, successCount, setSuccessCount)} className="predictions-form-submit-button predictions-form-submit-button-mobile" type="submit" value="Submit" form="predictions-form" />
       </View>
     </ScrollView>
   );
@@ -183,7 +189,10 @@ const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
           {/* eslint-disable-next-line no-underscore-dangle */}
           <TextInput style={[styles.predInput, { backgroundColor: match.locked ? '#C5D6CF' : 'white' }]} keyboardType="number-pad" editable={!match.locked} value={awayPred} onChangeText={(text) => { setAwayPred(text); updateFormData(match._id, 'away', text); }} />
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 10, marginTop: 5 }}>
+        <View style={{
+          flexDirection: 'row', justifyContent: 'center', marginBottom: 10, marginTop: 5,
+        }}
+        >
           {/* eslint-disable-next-line no-underscore-dangle */}
           <TouchableHighlight disabled={!!match.locked} type="button" style={{ opacity: bankerEnabled ? 1 : 0.3, height: 30, width: 30 }} onPress={() => { updateFormData(match._id, 'banker', !bankerEnabled); setBankerEnabled(!bankerEnabled); }}>
             <Image style={{ height: 30, width: 30 }} source={Dollar} />
@@ -194,7 +203,7 @@ const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
           </TouchableHighlight>
         </View>
       </View>
-      <View style={{flex:2, justifyContent: 'center', alignItems: 'center'}} className="away-team-container">
+      <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }} className="away-team-container">
         <Image alt="away club badge" className="club-badge" style={{ height: 50, width: 50, resizeMode: 'contain' }} source={Badges[match.away_team.replace(/\s+/g, '')]} />
         <View style={styles.predictionCircle} />
       </View>

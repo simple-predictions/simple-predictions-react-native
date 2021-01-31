@@ -14,12 +14,19 @@ const LoggedInNav = () => {
 
   return (
     <NavigationContainer>
-      <Tab.Navigator tabBarOptions={{ showIcon: false, labelPosition: 'below-icon', inactiveTintColor: 'black', activeTintColor: '#defc5f', style: { backgroundColor: '#defc5f' }, activeBackgroundColor: 'black', tabStyle: { borderRadius: 15, margin: 2 } }}>
+      <Tab.Navigator tabBarOptions={{
+        showIcon: false, labelPosition: 'below-icon', inactiveTintColor: 'black', activeTintColor: '#defc5f', style: { backgroundColor: '#defc5f' }, activeBackgroundColor: 'black', tabStyle: { borderRadius: 15, margin: 2 },
+      }}
+      >
         <Tab.Screen
           options={{
+            // eslint-disable-next-line react/prop-types
             tabBarIcon: ({ color, size }) => (
-              <Image style={{ height: size, width: size, tintColor: color }} source={questionMark} />
-            )
+              <Image
+                style={{ height: size, width: size, tintColor: color }}
+                source={questionMark}
+              />
+            ),
           }}
           name="Predictions"
           component={Predictions}
@@ -28,15 +35,17 @@ const LoggedInNav = () => {
           name="Mini Leagues"
           component={MiniLeagues}
           options={{
+            // eslint-disable-next-line react/prop-types
             tabBarIcon: ({ color, size }) => (
               <Image style={{ height: size, width: size, tintColor: color }} source={trophy} />
-            )
+            ),
           }}
         />
         <Tab.Screen
           name="Scoring"
           component={Scoring}
           options={{
+            // eslint-disable-next-line react/prop-types
             tabBarIcon: ({ color, size }) => (
               <Image style={{ height: size, width: size, tintColor: color }} source={correct} />
             ),

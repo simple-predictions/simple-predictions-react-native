@@ -1,7 +1,9 @@
 import { baseUrl } from '../globals';
 
-const handleSubmit = (formData, setSubmitEnabled, setSuccessMessage, successCount, setSuccessCount) => {
-  // setSubmitEnabled(false);
+const handleSubmit = (
+  formData, setSubmitEnabled, setSuccessMessage, successCount, setSuccessCount,
+) => {
+  setSubmitEnabled(false);
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -9,14 +11,13 @@ const handleSubmit = (formData, setSubmitEnabled, setSuccessMessage, successCoun
     credentials: 'include',
   };
 
-  fetch(`${baseUrl}/updatemanypredictions`, requestOptions)
-  {/*.then((res) => {
+  fetch(`${baseUrl}/updatemanypredictions`, requestOptions).then((res) => {
     if (res.status === 200) {
       setSuccessMessage('Your predictions have been updated');
       setSuccessCount(successCount + 1);
     }
     setSubmitEnabled(true);
-  });*/}
+  });
 };
 
 export default handleSubmit;

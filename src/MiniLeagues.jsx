@@ -1,10 +1,18 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Text, View, Button, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import {
+  Text, View, Button, ScrollView, StyleSheet, Dimensions,
+} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import PropTypes from 'prop-types';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { selectAllMinileagues, updateSelectedIdx, selectSelectedMinileagueRankings, selectSelectedMinileaguePreds, selectSelectedMinileagueName } from './MiniLeagues/minileaguesSlice';
+import {
+  selectAllMinileagues,
+  updateSelectedIdx,
+  selectSelectedMinileagueRankings,
+  selectSelectedMinileaguePreds,
+  selectSelectedMinileagueName,
+} from './MiniLeagues/minileaguesSlice';
 
 const Stack = createStackNavigator();
 
@@ -44,8 +52,16 @@ const MiniLeagueRankings = () => {
           ))}
         </View>
       ) : (
-        <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'column', minHeight: '100%' }}>
-          <Text style={{ color: 'white', margin: 20, textAlign: 'center', fontFamily: 'Montserrat-400', fontSize: 16 }}>{`Ask your friends to join your mini-league - name: ${name}`}</Text>
+        <View style={{
+          justifyContent: 'center', alignItems: 'center', flexDirection: 'column', minHeight: '100%',
+        }}
+        >
+          <Text style={{
+            color: 'white', margin: 20, textAlign: 'center', fontFamily: 'Montserrat-400', fontSize: 16,
+          }}
+          >
+            {`Ask your friends to join your mini-league - name: ${name}`}
+          </Text>
         </View>
       )}
     </ScrollView>
@@ -70,9 +86,18 @@ const MiniLeagueTable = () => {
   return (
     <ScrollView style={{ backgroundColor: '#323232', flex: 1 }}>
       {table.members.length > 1 ? table.matches.map((match) => (
-        <View style={{ backgroundColor: '#defc5f', margin: 10, padding: 10, borderRadius: 10 }} key={match._id}>
+        <View
+          style={{
+            backgroundColor: '#defc5f', margin: 10, padding: 10, borderRadius: 10,
+          }}
+          // eslint-disable-next-line no-underscore-dangle
+          key={match._id}
+        >
           <Text style={{ textAlign: 'center' }}>{`${match.home_team} vs ${match.away_team}`}</Text>
-          <View style={{ backgroundColor: '#323232', alignSelf: 'center', padding: 5, borderRadius: 50, margin: 5 }}>
+          <View style={{
+            backgroundColor: '#323232', alignSelf: 'center', padding: 5, borderRadius: 50, margin: 5,
+          }}
+          >
             <Text style={{ textAlign: 'center', color: 'white' }}>{match.live_home_score !== undefined && `${match.live_home_score} - ${match.live_away_score}`}</Text>
           </View>
           {table.members.map((member) => {
@@ -112,18 +137,23 @@ const MiniLeagueTable = () => {
           })}
         </View>
       )) : (
-        <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'column', minHeight: '100%' }}>
-          <Text style={{ color: 'white', margin: 20, textAlign: 'center', fontFamily: 'Montserrat-400', fontSize: 16 }}>{`Ask your friends to join your mini-league - name: ${name}`}</Text>
+        <View style={{
+          justifyContent: 'center', alignItems: 'center', flexDirection: 'column', minHeight: '100%',
+        }}
+        >
+          <Text style={{
+            color: 'white', margin: 20, textAlign: 'center', fontFamily: 'Montserrat-400', fontSize: 16,
+          }}
+          >
+            {`Ask your friends to join your mini-league - name: ${name}`}
+          </Text>
         </View>
       )}
     </ScrollView>
   );
 };
 
-const SingleMiniLeague = ({ route }) => {
-  const dispatch = useDispatch();
-  const { idx } = route.params;
-
+const SingleMiniLeague = () => {
   const Tab = createMaterialTopTabNavigator();
 
   return (
@@ -136,23 +166,23 @@ const SingleMiniLeague = ({ route }) => {
   );
 };
 
-SingleMiniLeague.propTypes = {
-  route: PropTypes.shape({
-    params: PropTypes.shape({
-      idx: PropTypes.number.isRequired,
-    }),
-  }).isRequired,
-};
-
 const MiniLeagueSelector = ({ navigation }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const minileagues = useSelector(selectAllMinileagues);
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: '#323232', borderWidth: 0 }}>
+    <View style={{
+      flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: '#323232', borderWidth: 0,
+    }}
+    >
       {minileagues.map((minileague, idx) => (
-        // eslint-disable-next-line no-underscore-dangle
-        <View key={minileague._id} style={{ backgroundColor: '#defc5f', width: '100%', marginTop: 20, borderRadius: 15 }}>
-          <Button color="black" title={minileague.name} onPress={() => {navigation.navigate('SinglePage', { idx, name: minileague.name }); dispatch(updateSelectedIdx(idx)); }} />
+        <View
+          // eslint-disable-next-line no-underscore-dangle
+          key={minileague._id}
+          style={{
+            backgroundColor: '#defc5f', width: '100%', marginTop: 20, borderRadius: 15,
+          }}
+        >
+          <Button color="black" title={minileague.name} onPress={() => { navigation.navigate('SinglePage', { idx, name: minileague.name }); dispatch(updateSelectedIdx(idx)); }} />
         </View>
       ))}
     </View>

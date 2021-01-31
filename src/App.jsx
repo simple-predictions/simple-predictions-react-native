@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // eslint-disable-next-line camelcase
 import { useFonts, ShareTechMono_400Regular } from '@expo-google-fonts/share-tech-mono';
