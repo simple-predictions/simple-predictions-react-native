@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import baseUrl from '../globals';
+import { baseUrl } from '../globals';
 
 export const getMinileaguePreds = createAsyncThunk(
   'minileagues/getMinileaguePreds',

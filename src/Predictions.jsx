@@ -8,6 +8,7 @@ import handleSubmit from './Logic/PredictionsLogic';
 import { selectUserPredictions, selectUserPredictionsGameweek, selectUserPredictionsStatus, getPredictions } from './Predictions/predictionsSlice';
 import Dollar from '../assets/dollar.png';
 import Padlock from '../assets/padlock.png';
+import { getFontSize } from './globals';
 
 const Predictions = () => {
   const userPredictions = useSelector(selectUserPredictions);
@@ -123,14 +124,14 @@ const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
 
   const styles = StyleSheet.create({
     predInput: {
-      height: 40,
-      width: 40,
+      height: (40),
+      width: (40),
       textAlign: 'center',
       borderColor: 'black',
       borderWidth: 1,
       borderRadius: 10,
       margin: 5,
-      fontSize: 18,
+      fontSize: (18),
       backgroundColor: 'white',
     },
     predictionCircle: {
@@ -165,7 +166,7 @@ const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
       </View>
       <View style={styles.scoreContainer}>
         <View style={{ marginTop: 10 }}>
-          <Text style={{ textAlign: 'center' }}>
+          <Text style={{ textAlign: 'center', fontSize: 14 }}>
             {kickOffTime.getDate()}
             {' '}
             {month[kickOffTime.getMonth()]}

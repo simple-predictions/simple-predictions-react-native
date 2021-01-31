@@ -1,4 +1,4 @@
-import baseUrl from '../globals';
+import { baseUrl } from '../globals';
 import { updateAlert } from '../Alerts/alertsSlice';
 
 const handleSubmit = (e, buttonEnabled, setButtonEnabled, location, setRedirect, dispatch) => {

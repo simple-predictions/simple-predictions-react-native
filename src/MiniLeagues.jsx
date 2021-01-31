@@ -101,7 +101,7 @@ const MiniLeagueTable = () => {
                   <View style={[styles.scoringCircle, { backgroundColor }]} />
                 </View>
               ) : (
-                <View style={{ flexDirection: 'row' }}>
+                <View key={member.username} style={{ flexDirection: 'row' }}>
                   <Text style={{ flex: 1, fontFamily: 'Montserrat-700' }}>{member.username}</Text>
                   <Text style={{ flex: 1 }}>No prediction</Text>
                 </View>

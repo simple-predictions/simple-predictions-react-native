@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import PropTypes from 'prop-types';
 import ContinueToAppButton from './ContinueToAppButton';
+import { getFontSize } from './globals';
 
 const FirstOpen = ({ setFirstOpenVisible }) => {
   const [activeDotIndex, setActiveDotIndex] = useState(0);
@@ -49,10 +50,10 @@ const FirstOpen = ({ setFirstOpenVisible }) => {
   const renderItem = ({ item }) => (
     <View style={styles.outerView}>
       <View style={{ flex: 1 }}>
-        <Text style={[{ fontSize: 200, fontFamily: 'ShareTechMono-400' }, styles.innerText]}>{item.numTitle}</Text>
+        <Text adjustsFontSizeToFit style={[{ fontSize: (200), fontFamily: 'ShareTechMono-400' }, styles.innerText]}>{item.numTitle}</Text>
       </View>
       <View style={{ flex: 1 }}>
-        <Text style={[{ marginBottom: 20, textTransform: 'uppercase', fontFamily: 'Montserrat-700', fontSize: 40 }, styles.innerText]}>{item.title}</Text>
+        <Text adjustsFontSizeToFit numberOfLines={1} style={[{ marginBottom: 20, textTransform: 'uppercase', fontFamily: 'Montserrat-700', fontSize: (40) }, styles.innerText]}>{item.title}</Text>
         <Text style={[{ fontFamily: 'Montserrat-400' }, styles.innerText]}>{item.text}</Text>
       </View>
     </View>

@@ -1,4 +1,4 @@
-import baseUrl from '../globals';
+import { baseUrl } from '../globals';
 
 const handleSubmit = (formData, setSubmitEnabled, setSuccessMessage, successCount, setSuccessCount) => {
   // setSubmitEnabled(false);
