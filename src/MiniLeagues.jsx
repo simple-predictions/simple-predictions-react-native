@@ -170,6 +170,7 @@ const MiniLeagues = () => (
         title: route.params.name,
         headerTintColor: 'white',
         headerStyle: { backgroundColor: '#323232', borderWidth: 0 },
+        headerBackTitle: 'Back',
       })}
       name="SinglePage"
       component={SingleMiniLeague}
