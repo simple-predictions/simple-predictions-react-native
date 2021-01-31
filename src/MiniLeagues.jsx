@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Text, View, Button, ScrollView, StyleSheet } from 'react-native';
+import { Text, View, Button, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import PropTypes from 'prop-types';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -27,22 +27,22 @@ const MiniLeagueRankings = () => {
   const name = useSelector(selectSelectedMinileagueName);
 
   return (
-    <ScrollView style={{ backgroundColor: '#323232' }}>
+    <ScrollView style={{ backgroundColor: '#323232', minHeight: '100%' }}>
       {rankings.length > 1 ? (
-      <View>
-        <View style={styles.rankingsRow}>
-          <Text style={[styles.rankingsRowCol, { fontFamily: 'Montserrat-700' }]}>Position</Text>
-          <Text style={[styles.rankingsRowCol, { fontFamily: 'Montserrat-700' }]}>Username</Text>
-          <Text style={[styles.rankingsRowCol, { fontFamily: 'Montserrat-700' }]}>Points</Text>
-        </View>
-        {rankings.map((user, idx) => (
-          <View style={styles.rankingsRow} key={user.username}>
-            <Text style={[styles.rankingsRowCol, { fontFamily: 'Montserrat-400' }]}>{idx + 1}</Text>
-            <Text style={[styles.rankingsRowCol, { fontFamily: 'Montserrat-400' }]}>{user.username}</Text>
-            <Text style={[styles.rankingsRowCol, { fontFamily: 'Montserrat-400' }]}>{user.points}</Text>
+        <View>
+          <View style={styles.rankingsRow}>
+            <Text style={[styles.rankingsRowCol, { fontFamily: 'Montserrat-700' }]}>Position</Text>
+            <Text style={[styles.rankingsRowCol, { fontFamily: 'Montserrat-700' }]}>Username</Text>
+            <Text style={[styles.rankingsRowCol, { fontFamily: 'Montserrat-700' }]}>Points</Text>
           </View>
-        ))}
-      </View>
+          {rankings.map((user, idx) => (
+            <View style={styles.rankingsRow} key={user.username}>
+              <Text style={[styles.rankingsRowCol, { fontFamily: 'Montserrat-400' }]}>{idx + 1}</Text>
+              <Text style={[styles.rankingsRowCol, { fontFamily: 'Montserrat-400' }]}>{user.username}</Text>
+              <Text style={[styles.rankingsRowCol, { fontFamily: 'Montserrat-400' }]}>{user.points}</Text>
+            </View>
+          ))}
+        </View>
       ) : (
         <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'column', minHeight: '100%' }}>
           <Text style={{ color: 'white', margin: 20, textAlign: 'center', fontFamily: 'Montserrat-400', fontSize: 16 }}>{`Ask your friends to join your mini-league - name: ${name}`}</Text>
@@ -68,11 +68,13 @@ const MiniLeagueTable = () => {
   });
 
   return (
-    <ScrollView style={{ backgroundColor: '#323232', minHeight: '100%' }}>
+    <ScrollView style={{ backgroundColor: '#323232', flex: 1 }}>
       {table.members.length > 1 ? table.matches.map((match) => (
         <View style={{ backgroundColor: '#defc5f', margin: 10, padding: 10, borderRadius: 10 }} key={match._id}>
           <Text style={{ textAlign: 'center' }}>{`${match.home_team} vs ${match.away_team}`}</Text>
-          <Text>{match.live_home_score !== undefined && `${match.live_home_score} - ${match.live_away_score}`}</Text>
+          <View style={{ backgroundColor: '#323232', alignSelf: 'center', padding: 5, borderRadius: 50, margin: 5 }}>
+            <Text style={{ textAlign: 'center', color: 'white' }}>{match.live_home_score !== undefined && `${match.live_home_score} - ${match.live_away_score}`}</Text>
+          </View>
           {table.members.map((member) => {
             let pred = match.predictions.find(
               (obj) => obj.username === member.username,
@@ -122,15 +124,15 @@ const SingleMiniLeague = ({ route }) => {
   const dispatch = useDispatch();
   const { idx } = route.params;
 
-  dispatch(updateSelectedIdx(idx));
-
   const Tab = createMaterialTopTabNavigator();
 
   return (
-    <Tab.Navigator tabBarOptions={{ style: { backgroundColor: '#323232' }, activeTintColor: 'white' }}>
-      <Tab.Screen name="Rankings" component={MiniLeagueRankings} />
-      <Tab.Screen name="Table" component={MiniLeagueTable} />
-    </Tab.Navigator>
+    <View style={{ flex: 1 }}>
+      <Tab.Navigator tabBarOptions={{ style: { backgroundColor: '#323232' }, activeTintColor: 'white' }} initialLayout={{ width: Dimensions.get('window').width }}>
+        <Tab.Screen name="Rankings" component={MiniLeagueRankings} />
+        <Tab.Screen name="Table" component={MiniLeagueTable} />
+      </Tab.Navigator>
+    </View>
   );
 };
 
@@ -143,13 +145,14 @@ SingleMiniLeague.propTypes = {
 };
 
 const MiniLeagueSelector = ({ navigation }) => {
+  const dispatch = useDispatch()
   const minileagues = useSelector(selectAllMinileagues);
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: '#323232', borderWidth: 0 }}>
       {minileagues.map((minileague, idx) => (
         // eslint-disable-next-line no-underscore-dangle
         <View key={minileague._id} style={{ backgroundColor: '#defc5f', width: '100%', marginTop: 20, borderRadius: 15 }}>
-          <Button color="black" title={minileague.name} onPress={() => navigation.navigate('SinglePage', { idx, name: minileague.name })} />
+          <Button color="black" title={minileague.name} onPress={() => {navigation.navigate('SinglePage', { idx, name: minileague.name }); dispatch(updateSelectedIdx(idx)); }} />
         </View>
       ))}
     </View>
@@ -174,6 +177,7 @@ const MiniLeagues = () => (
       })}
       name="SinglePage"
       component={SingleMiniLeague}
+      screen
     />
   </Stack.Navigator>
 );
