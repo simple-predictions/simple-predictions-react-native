@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { View } from 'react-native';
+import { useColorScheme } from 'react-native-appearance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // eslint-disable-next-line camelcase
 import { useFonts, ShareTechMono_400Regular } from '@expo-google-fonts/share-tech-mono';
@@ -14,6 +15,8 @@ import LoggedInNav from './LoggedInNav';
 import { getPredictions } from './Predictions/predictionsSlice';
 import { getMinileagues } from './MiniLeagues/minileaguesSlice';
 import { getScoredPreds } from './Scoring/scoringSlice';
+import { setColorScheme } from './ColorScheme/colorSchemeSlice';
+import { darkColorScheme, lightColorScheme } from './globals';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -22,7 +25,7 @@ const App = () => {
   if (loggedIn) {
     dispatch(getPredictions());
     dispatch(getMinileagues());
-    dispatch(getScoredPreds(['solly', 21]));
+    dispatch(getScoredPreds([]));
   } else {
     dispatch(getUserInfo());
   }
@@ -41,6 +44,16 @@ const App = () => {
       }
     });
   }, []);
+
+
+  const colorScheme = useColorScheme();
+
+  if (colorScheme === 'dark') {
+    dispatch(setColorScheme(darkColorScheme));
+  } else {
+    // render some light thing
+    dispatch(setColorScheme(lightColorScheme));
+  }
 
   return (
     <View style={{ height: '100%', width: '100%' }}>

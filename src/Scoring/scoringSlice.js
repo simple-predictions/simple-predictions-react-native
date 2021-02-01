@@ -45,15 +45,20 @@ export const scoringSlice = createSlice({
   initialState: {
     selectedUser: 'Mine',
     selectedGameweek: 0,
-    matches: [],
+    matches: {},
     status: 'idle',
+    currentGameweek: 0,
   },
   reducers: {},
   extraReducers: {
     [getScoredPreds.fulfilled]: (state, action) => {
-      state.matches = action.payload.matches;
+      state.matches[action.payload.gameweek] = {};
+      state.matches[action.payload.gameweek][action.payload.username] = action.payload.matches;
       state.selectedGameweek = action.payload.gameweek;
       state.selectedUser = action.payload.username;
+      if (state.currentGameweek === 0) {
+        state.currentGameweek = action.payload.gameweek;
+      }
       state.status = 'success';
     },
     [getScoredPreds.pending]: (state) => {
@@ -63,9 +68,37 @@ export const scoringSlice = createSlice({
 });
 
 export const selectScoredMatches = (state) => (
-  state.scoring.matches.filter((val) => new Date(val.kick_off_time) < Date.now())
+  state.scoring.matches[state.scoring.selectedGameweek][state.scoring.selectedUser].filter(
+    (val) => new Date(val.kick_off_time) < Date.now(),
+  )
 );
 export const selectSelectedGameweek = (state) => state.scoring.selectedGameweek;
 export const selectScoringStatus = (state) => state.scoring.status;
+export const selectFeatureMatches = (state) => {
+  if (state.scoring.status !== 'success') {
+    return { name: '', matches: [] };
+  }
+
+  const matches = state.scoring.matches[state.scoring.currentGameweek].Mine;
+  const liveMatches = matches.filter((match) => match.status && match.status !== 'FINISHED' && match.status !== 'SCHEDULED');
+  if (liveMatches.length > 0) {
+    return { name: 'Live Matches', matches: liveMatches };
+  }
+
+  const nextKickOffTime = matches.find(
+    (match) => new Date(match.kick_off_time) > Date.now(),
+  ).kick_off_time;
+
+  const nextMatches = matches.filter((match) => match.kick_off_time === nextKickOffTime);
+  if (nextMatches.length > 0) {
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const dateTime = new Date(nextKickOffTime);
+    const kickOffTimeStr = `${dateTime.getDate()} ${monthNames[dateTime.getMonth()]} at ${dateTime.getHours()}:${dateTime.getMinutes()}`;
+    return { name: `Upcoming games on ${kickOffTimeStr}`, matches: nextMatches };
+  }
+
+  const lastMatch = [matches[-1]];
+  return { name: 'Last Match', lastMatch };
+};
 
 export default scoringSlice.reducer;

@@ -92,6 +92,25 @@ export const selectSelectedMinileagueGameweek = (state) => (
 export const selectSelectedMinileagueName = (state) => (
   state.minileagues.all[state.minileagues.selectedIdx].name
 );
+export const selectAllMinileaguesUserPosition = (state) => (
+  state.minileagues.all.filter(
+    (minileague) => minileague.rankings.length > 1,
+  ).map((minileague) => {
+    const userIdx = minileague.rankings.findIndex((member) => (
+      member.username === state.user.username // initialize with userIdx
+    ));
+
+    const usersArr = [{ ...minileague.rankings[userIdx], position: (userIdx + 1) }];
+    if (userIdx > 0) {
+      usersArr.unshift({ ...minileague.rankings[userIdx - 1], position: (userIdx) });
+    }
+    if (userIdx + 1 < usersArr.length) {
+      usersArr.push({ ...minileague.rankings[userIdx + 1], position: (userIdx + 2) });
+    }
+
+    return { arr: usersArr, name: minileague.name };
+  })
+);
 
 export const { updateSelectedIdx } = minileaguesSlice.actions;
 
