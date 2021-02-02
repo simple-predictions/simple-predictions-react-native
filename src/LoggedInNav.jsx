@@ -18,7 +18,18 @@ const LoggedInNav = () => {
     <NavigationContainer>
       <Tab.Navigator
         tabBarOptions={{
-          showIcon: false, labelPosition: 'below-icon', inactiveTintColor: 'black', activeTintColor: '#defc5f', style: { backgroundColor: '#defc5f' }, activeBackgroundColor: 'black', tabStyle: { borderRadius: 15, margin: 2 },
+          tabBarBadgeStyle: {
+            backgroundColor: 'blue', height: 12, minWidth: 12, borderRadius: 6,
+          },
+          showLabel: false,
+          showIcon: false,
+          labelPosition: 'below-icon',
+          inactiveTintColor: 'black',
+          activeTintColor: '#E70F0B',
+          style: {
+            backgroundColor: '#F3F3F3', height: 60, borderTopColor: 'transparent', shadowColor: 'transparent',
+          },
+          tabStyle: { borderRadius: 15, margin: 2 },
         }}
         lazy={false}
       >

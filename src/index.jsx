@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { registerRootComponent } from 'expo';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Provider } from 'react-redux';
 import store from './store/store';
 import App from './App';
