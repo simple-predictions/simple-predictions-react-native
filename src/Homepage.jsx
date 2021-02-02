@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Text, View, Button, ScrollView, Image, StyleSheet,
+  Text, View, Button, ScrollView, Image, StyleSheet, Pressable,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
@@ -11,13 +11,8 @@ import { selectColorScheme } from './ColorScheme/colorSchemeSlice';
 import Badges from './ImageLoader';
 import Live from '../assets/live.png';
 
-const Homepage = () => {
-  const username = useSelector(selectUserUsername);
-  const points = useSelector(selectUserTotalPoints);
-  const minileagues = useSelector(selectAllMinileaguesUserPosition);
-  const featureMatches = useSelector(selectFeatureMatches);
-  const navigation = useNavigation();
-  const colorScheme = useSelector(selectColorScheme);
+const FeatureMatch = ({ match, name }) => {
+  const [userPredStr, setUserPredStr] = useState(`${match.user_predictions[0].home_pred}:${match.user_predictions[0].away_pred}`);
 
   const styles = StyleSheet.create({
     teamBackgroundCircle: {
@@ -35,6 +30,104 @@ const Homepage = () => {
       elevation: 5,
     },
   });
+  const colorScheme = useSelector(selectColorScheme);
+
+  return (
+    <View
+      // eslint-disable-next-line no-underscore-dangle
+      key={match._id}
+      style={{
+        backgroundColor: colorScheme.fourth, marginTop: 10, marginBottom: 10, padding: 10, paddingTop: 40, borderRadius: 10, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 10, elevation: 5, alignItems: 'center',
+      }}
+    >
+      <View style={{ flexDirection: 'row' }}>
+        <View style={{ flex: 1, alignItems: 'center' }}>
+          <View>
+            <View style={styles.teamBackgroundCircle} />
+            <Image style={{ height: 60, width: 60, resizeMode: 'contain' }} source={Badges[match.home_team.replaceAll(' ', '')]} />
+          </View>
+          <Text style={{
+            color: colorScheme.secondary, fontSize: 15, padding: 10, flex: 1, textAlign: 'center', marginTop: 10, fontFamily: 'Montserrat-400',
+          }}
+          >
+            {match.home_team}
+          </Text>
+        </View>
+        <View style={{ flex: 1, alignItems: 'center' }}>
+          <View>
+            <View style={styles.teamBackgroundCircle} />
+            <Image style={{ height: 60, width: 60, resizeMode: 'contain' }} source={Badges[match.away_team.replaceAll(' ', '')]} />
+          </View>
+          <Text style={{
+            color: colorScheme.secondary, fontSize: 15, padding: 10, flex: 1, textAlign: 'center', marginTop: 10, fontFamily: 'Montserrat-400',
+          }}
+          >
+            {match.away_team}
+          </Text>
+        </View>
+      </View>
+      {name === 'Live Matches' && (
+      <View style={{ flexDirection: 'row', marginBottom: 20, marginTop: 10 }}>
+        <View style={{
+          flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: '#E4E3E5', paddingTop: 10, paddingBottom: 10, marginLeft: 20, marginRight: 20, borderRadius: 50, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 5,
+        }}
+        >
+          <View style={{ flex: 1 }}>
+            <View style={{
+              // eslint-disable-next-line no-nested-ternary
+              borderRadius: 50, position: 'absolute', height: 35, width: 35, backgroundColor: match.user_predictions[0].points > 0 ? 'green' : match.user_predictions[0].points == null || match.user_predictions[0].points === 0 ? 'gray' : 'red', left: 12, top: -6,
+            }}
+            />
+            <Text style={{ fontSize: 18, textAlign: 'center' }}>{match.user_predictions[0].points || 0}</Text>
+          </View>
+          <Text style={{
+            textAlign: 'left', letterSpacing: 3, fontSize: 18, flex: 1,
+          }}
+          >
+            {`${match.user_predictions[0].home_pred}:${match.user_predictions[0].away_pred}`}
+          </Text>
+        </View>
+        <View style={{
+          flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: '#E4E3E5', paddingTop: 10, paddingBottom: 10, marginLeft: 20, marginRight: 20, borderRadius: 50, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 5,
+        }}
+        >
+          <Image style={{ height: 30, resizeMode: 'contain', flex: 1 }} source={Live} />
+          <Text style={{ letterSpacing: 3, fontSize: 18, flex: 1 }}>{`${match.live_home_score}:${match.live_away_score}`}</Text>
+        </View>
+      </View>
+      )}
+      {name.includes('Upcoming games:') && (
+      <View style={{
+        flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10, marginBottom: 10,
+      }}
+      >
+        <View style={{ flex: 1 }} />
+        <Pressable
+          style={{
+            flexDirection: 'row', justifyContent: 'center', flex: 2, backgroundColor: '#E4E3E5', paddingTop: 10, paddingBottom: 10, marginLeft: 20, marginRight: 20, borderRadius: 50, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 5,
+          }}
+          delay={1000}
+          onLongPress={() => setUserPredStr('Your prediction')}
+          onPressOut={() => setTimeout(() => setUserPredStr(`${match.user_predictions[0].home_pred}:${match.user_predictions[0].away_pred}`), 1000)}
+        >
+          <View>
+              <Text style={{ textAlign: 'center', letterSpacing: 3, fontSize: 18 }}>{userPredStr}</Text>
+          </View>
+        </Pressable>
+        <View style={{ flex: 1 }} />
+      </View>
+      )}
+    </View>
+  )
+}
+
+const Homepage = () => {
+  const username = useSelector(selectUserUsername);
+  const points = useSelector(selectUserTotalPoints);
+  const minileagues = useSelector(selectAllMinileaguesUserPosition);
+  const featureMatches = useSelector(selectFeatureMatches);
+  const navigation = useNavigation();
+  const colorScheme = useSelector(selectColorScheme);
 
   return (
     <ScrollView
@@ -65,87 +158,7 @@ const Homepage = () => {
           backgroundColor: colorScheme.third, paddingTop: 10, paddingBottom: 10, borderRadius: 15,
         }}
         >
-          {featureMatches.matches.map((match) => (
-            <View
-              // eslint-disable-next-line no-underscore-dangle
-              key={match._id}
-              style={{
-                backgroundColor: colorScheme.fourth, marginTop: 10, marginBottom: 10, padding: 10, paddingTop: 40, borderRadius: 10, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 10, elevation: 5, alignItems: 'center',
-              }}
-            >
-              <View style={{ flexDirection: 'row' }}>
-                <View style={{ flex: 1, alignItems: 'center' }}>
-                  <View>
-                    <View style={styles.teamBackgroundCircle} />
-                    <Image style={{ height: 60, width: 60, resizeMode: 'contain' }} source={Badges[match.home_team.replaceAll(' ', '')]} />
-                  </View>
-                  <Text style={{
-                    color: colorScheme.secondary, fontSize: 15, padding: 10, flex: 1, textAlign: 'center', marginTop: 10,
-                  }}
-                  >
-                    {match.home_team}
-                  </Text>
-                </View>
-                <View style={{ flex: 1, alignItems: 'center' }}>
-                  <View>
-                    <View style={styles.teamBackgroundCircle} />
-                    <Image style={{ height: 60, width: 60, resizeMode: 'contain' }} source={Badges[match.away_team.replaceAll(' ', '')]} />
-                  </View>
-                  <Text style={{
-                    color: colorScheme.secondary, fontSize: 15, padding: 10, flex: 1, textAlign: 'center', marginTop: 10,
-                  }}
-                  >
-                    {match.away_team}
-                  </Text>
-                </View>
-              </View>
-              {featureMatches.name === 'Live Matches' && (
-              <View style={{ flexDirection: 'row', marginBottom: 20, marginTop: 10 }}>
-                <View style={{
-                  flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: '#E4E3E5', paddingTop: 10, paddingBottom: 10, marginLeft: 20, marginRight: 20, borderRadius: 50, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 5,
-                }}
-                >
-                  <View style={{ flex: 1 }}>
-                    <View style={{
-                      // eslint-disable-next-line no-nested-ternary
-                      borderRadius: 50, position: 'absolute', height: 35, width: 35, backgroundColor: match.user_predictions[0].points > 0 ? 'green' : match.user_predictions[0].points == null || match.user_predictions[0].points === 0 ? 'gray' : 'red', left: 12, top: -6,
-                    }}
-                    />
-                    <Text style={{ fontSize: 18, textAlign: 'center' }}>{match.user_predictions[0].points || 0}</Text>
-                  </View>
-                  <Text style={{
-                    textAlign: 'left', letterSpacing: 3, fontSize: 18, flex: 1,
-                  }}
-                  >
-                    {`${match.user_predictions[0].home_pred}:${match.user_predictions[0].away_pred}`}
-                  </Text>
-                </View>
-                <View style={{
-                  flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: '#E4E3E5', paddingTop: 10, paddingBottom: 10, marginLeft: 20, marginRight: 20, borderRadius: 50, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 5,
-                }}
-                >
-                  <Image style={{ height: 30, resizeMode: 'contain', flex: 1 }} source={Live} />
-                  <Text style={{ letterSpacing: 3, fontSize: 18, flex: 1 }}>{`${match.live_home_score}:${match.live_away_score}`}</Text>
-                </View>
-              </View>
-              )}
-              {featureMatches.name.includes('Upcoming games:') && (
-              <View style={{
-                flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10, marginBottom: 10,
-              }}
-              >
-                <View style={{ flex: 1 }} />
-                <View style={{
-                  flexDirection: 'row', justifyContent: 'center', flex: 2, backgroundColor: '#E4E3E5', paddingTop: 10, paddingBottom: 10, marginLeft: 20, marginRight: 20, borderRadius: 50, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 5,
-                }}
-                >
-                  <Text style={{ textAlign: 'center', letterSpacing: 3, fontSize: 18 }}>{`${match.user_predictions[0].home_pred}:${match.user_predictions[0].away_pred}`}</Text>
-                </View>
-                <View style={{ flex: 1 }} />
-              </View>
-              )}
-            </View>
-          ))}
+          {featureMatches.matches.map((match) => <FeatureMatch name={featureMatches.name} match={match} />)}
         </View>
       </View>
       )}
