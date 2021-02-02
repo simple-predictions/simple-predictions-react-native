@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View } from 'react-native';
-import { useColorScheme } from 'react-native-appearance';
+import { View, Appearance } from 'react-native';
+import {} from 'react-native-appearance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // eslint-disable-next-line camelcase
 import { useFonts, ShareTechMono_400Regular } from '@expo-google-fonts/share-tech-mono';
@@ -37,23 +37,26 @@ const App = () => {
     'Montserrat-700': Montserrat_700Bold,
   });
 
+  const handleDarkModeUpdate = (preferences) => {
+    const { colorScheme } = preferences;
+    if (colorScheme === 'dark') {
+      dispatch(setColorScheme(darkColorScheme));
+    } else {
+      // render some light thing
+      dispatch(setColorScheme(lightColorScheme));
+    }
+  };
+
   useEffect(() => {
     AsyncStorage.getItem('@alreadyLaunched').then((value) => {
       if (value === null) {
         setFirstOpenVisible(true);
       }
     });
+    handleDarkModeUpdate({ colorScheme: Appearance.getColorScheme() });
   }, []);
 
-
-  const colorScheme = useColorScheme();
-
-  if (colorScheme === 'dark') {
-    dispatch(setColorScheme(darkColorScheme));
-  } else {
-    // render some light thing
-    dispatch(setColorScheme(lightColorScheme));
-  }
+  Appearance.addChangeListener(handleDarkModeUpdate);
 
   return (
     <View style={{ height: '100%', width: '100%' }}>

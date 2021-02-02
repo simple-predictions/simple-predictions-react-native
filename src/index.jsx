@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 });
 
 function index() {
-  AsyncStorage.removeItem('@alreadyLaunched');
+  // AsyncStorage.removeItem('@alreadyLaunched');
   return (
     <Provider store={store}>
       <View style={styles.container}>

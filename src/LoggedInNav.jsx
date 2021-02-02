@@ -16,9 +16,11 @@ const LoggedInNav = () => {
 
   return (
     <NavigationContainer>
-      <Tab.Navigator tabBarOptions={{
-        showIcon: false, labelPosition: 'below-icon', inactiveTintColor: 'black', activeTintColor: '#defc5f', style: { backgroundColor: '#defc5f' }, activeBackgroundColor: 'black', tabStyle: { borderRadius: 15, margin: 2 },
-      }}
+      <Tab.Navigator
+        tabBarOptions={{
+          showIcon: false, labelPosition: 'below-icon', inactiveTintColor: 'black', activeTintColor: '#defc5f', style: { backgroundColor: '#defc5f' }, activeBackgroundColor: 'black', tabStyle: { borderRadius: 15, margin: 2 },
+        }}
+        lazy={false}
       >
         <Tab.Screen
           options={{
