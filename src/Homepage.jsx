@@ -52,24 +52,22 @@ const Homepage = () => {
               // eslint-disable-next-line no-underscore-dangle
               key={match._id}
               style={{
-                backgroundColor: colorScheme.fourth, marginTop: 10, marginBottom: 10, padding: 10, borderRadius: 10, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 10, elevation: 5, alignItems: 'center',
+                flexDirection: 'row', backgroundColor: colorScheme.fourth, marginTop: 10, marginBottom: 10, padding: 10, paddingTop: 30, borderRadius: 10, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 10, elevation: 5, alignItems: 'center',
               }}
             >
-              {match.user_predictions[0].home_pred === '-'
-              && (
-              <View style={{ position: 'absolute', top: 0, left: 0, right: 10, bottom: 0, justifyContent: 'center', alignItems: 'flex-end' }}>
-                <Text>No prediction</Text>
+              <View style={{ flex: 1, alignItems: 'center' }}>
+                <View>
+                  <View style={{ position: 'absolute', width: 80, height: 80, top: -10, left: -10, borderRadius: 100 / 2, backgroundColor: '#E4E3E5' }} />
+                  <Image style={{ height: 60, width: 60, resizeMode: 'contain'}} source={Badges[match.home_team.replaceAll(' ', '')]} />
+                </View>
+                <Text style={{ color: colorScheme.secondary, fontSize: 15, padding: 10, flex: 1, textAlign: 'center' }}>{match.home_team}</Text>
               </View>
-              )}
-              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <Image style={{ height: 15, width: 15, resizeMode: 'contain' }} source={Badges[match.home_team.replaceAll(' ', '')]} />
-                <Text style={{ color: colorScheme.secondary, fontSize: 15, padding: 10, textAlign: 'left', flex: 1 }}>{match.home_team}</Text>
-                {match.user_predictions[0].home_pred !== '-' && <Text>{match.user_predictions[0].home_pred}</Text>}
-              </View>
-              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                <Image style={{ height: 15, width: 15, resizeMode: 'contain' }} source={Badges[match.away_team.replaceAll(' ', '')]} />
-                <Text style={{ color: colorScheme.secondary, fontSize: 15, padding: 10, textAlign: 'left', flex: 1 }}>{match.away_team}</Text>
-                <Text>{match.user_predictions[0].home_pred !== '-' && match.user_predictions[0].away_pred}</Text>
+              <View style={{ flex: 1, alignItems: 'center' }}>
+                <View>
+                  <View style={{ position: 'absolute', width: 80, height: 80, top: -10, left: -10, borderRadius: 100 / 2, backgroundColor: '#E4E3E5' }} />
+                  <Image style={{ height: 60, width: 60, resizeMode: 'contain'}} source={Badges[match.away_team.replaceAll(' ', '')]} />
+                </View>
+                <Text style={{ color: colorScheme.secondary, fontSize: 15, padding: 10, flex: 1, textAlign: 'center' }}>{match.away_team}</Text>
               </View>
             </View>
           ))}
