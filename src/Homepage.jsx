@@ -9,6 +9,7 @@ import { selectUserTotalPoints, selectUserUsername } from './User/userSlice';
 import { selectFeatureMatches } from './Scoring/scoringSlice';
 import { selectColorScheme } from './ColorScheme/colorSchemeSlice';
 import Badges from './ImageLoader';
+import Live from '../assets/live.png';
 
 const Homepage = () => {
   const username = useSelector(selectUserUsername);
@@ -38,7 +39,7 @@ const Homepage = () => {
       {featureMatches && (
       <View style={{ margin: 20 }}>
         <Text style={{
-          color: colorScheme.secondary, fontFamily: 'Montserrat-700', fontSize: 25, marginBottom: 15,
+          color: colorScheme.secondary, fontFamily: 'Montserrat-700', fontSize: 25, marginBottom: 10,
         }}
         >
           {featureMatches.name}
@@ -52,23 +53,36 @@ const Homepage = () => {
               // eslint-disable-next-line no-underscore-dangle
               key={match._id}
               style={{
-                flexDirection: 'row', backgroundColor: colorScheme.fourth, marginTop: 10, marginBottom: 10, padding: 10, paddingTop: 30, borderRadius: 10, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 10, elevation: 5, alignItems: 'center',
+                backgroundColor: colorScheme.fourth, marginTop: 10, marginBottom: 10, padding: 10, paddingTop: 40, borderRadius: 10, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 10, elevation: 5, alignItems: 'center',
               }}
             >
-              <View style={{ flex: 1, alignItems: 'center' }}>
-                <View>
-                  <View style={{ position: 'absolute', width: 80, height: 80, top: -10, left: -10, borderRadius: 100 / 2, backgroundColor: '#E4E3E5' }} />
-                  <Image style={{ height: 60, width: 60, resizeMode: 'contain'}} source={Badges[match.home_team.replaceAll(' ', '')]} />
+              <View style={{ flexDirection: 'row' }}>
+                <View style={{ flex: 1, alignItems: 'center' }}>
+                  <View>
+                    <View style={{ position: 'absolute', width: 80, height: 80, top: -10, left: -10, borderRadius: 100 / 2, backgroundColor: '#E4E3E5' }} />
+                    <Image style={{ height: 60, width: 60, resizeMode: 'contain'}} source={Badges[match.home_team.replaceAll(' ', '')]} />
+                  </View>
+                  <Text style={{ color: colorScheme.secondary, fontSize: 15, padding: 10, flex: 1, textAlign: 'center', marginTop: 10 }}>{match.home_team}</Text>
                 </View>
-                <Text style={{ color: colorScheme.secondary, fontSize: 15, padding: 10, flex: 1, textAlign: 'center' }}>{match.home_team}</Text>
-              </View>
-              <View style={{ flex: 1, alignItems: 'center' }}>
-                <View>
-                  <View style={{ position: 'absolute', width: 80, height: 80, top: -10, left: -10, borderRadius: 100 / 2, backgroundColor: '#E4E3E5' }} />
-                  <Image style={{ height: 60, width: 60, resizeMode: 'contain'}} source={Badges[match.away_team.replaceAll(' ', '')]} />
+                <View style={{ flex: 1, alignItems: 'center' }}>
+                  <View>
+                    <View style={{ position: 'absolute', width: 80, height: 80, top: -10, left: -10, borderRadius: 100 / 2, backgroundColor: '#E4E3E5' }} />
+                    <Image style={{ height: 60, width: 60, resizeMode: 'contain'}} source={Badges[match.away_team.replaceAll(' ', '')]} />
+                  </View>
+                  <Text style={{ color: colorScheme.secondary, fontSize: 15, padding: 10, flex: 1, textAlign: 'center', marginTop: 10 }}>{match.away_team}</Text>
                 </View>
-                <Text style={{ color: colorScheme.secondary, fontSize: 15, padding: 10, flex: 1, textAlign: 'center' }}>{match.away_team}</Text>
               </View>
+              {featureMatches.name === 'Live Matches' && (
+              <View style={{ flexDirection: 'row', marginBottom: 20, marginTop: 10 }}>
+                <View style={{ justifyContent: 'center', flex: 1, backgroundColor: '#E4E3E5', paddingTop: 10, paddingBottom: 10, marginLeft: 20, marginRight: 20, borderRadius: 50, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.5, shadowRadius: 10, elevation: 5 }}>
+                  <Text style={{ textAlign: 'center', letterSpacing: 3, fontSize: 18 }}>{`${match.user_predictions[0].home_pred}:${match.user_predictions[0].away_pred}`}</Text>
+                </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: '#E4E3E5', paddingTop: 10, paddingBottom: 10, marginLeft: 20, marginRight: 20, borderRadius: 50, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.5, shadowRadius: 10, elevation: 5 }}>
+                  <Image style={{ height: 30, resizeMode: 'contain', flex: 1 }} source={Live} />
+                  <Text style={{ letterSpacing: 3, fontSize: 18, flex: 1 }}>{`${match.live_home_score}:${match.live_away_score}`}</Text>
+                </View>
+              </View>
+              )}
             </View>
           ))}
         </View>
