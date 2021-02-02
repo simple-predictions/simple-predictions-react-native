@@ -96,7 +96,7 @@ export const selectFeatureMatches = (state) => {
   if (nextMatches.length > 0) {
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const dateTime = new Date(nextKickOffTime);
-    const kickOffTimeStr = `${dateTime.getDate()} ${monthNames[dateTime.getMonth()]} at ${dateTime.getHours()}.${dateTime.getMinutes()}`;
+    const kickOffTimeStr = `${dateTime.getDate()} ${monthNames[dateTime.getMonth()]} at ${dateTime.getHours()}.${(`0${dateTime.getMinutes()}`).slice(-2)}`;
     return { name: `Upcoming games:\n${kickOffTimeStr}`, matches: nextMatches };
   }
 

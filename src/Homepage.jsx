@@ -74,13 +74,25 @@ const Homepage = () => {
               </View>
               {featureMatches.name === 'Live Matches' && (
               <View style={{ flexDirection: 'row', marginBottom: 20, marginTop: 10 }}>
-                <View style={{ justifyContent: 'center', flex: 1, backgroundColor: '#E4E3E5', paddingTop: 10, paddingBottom: 10, marginLeft: 20, marginRight: 20, borderRadius: 50, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.5, shadowRadius: 10, elevation: 5 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', flex: 1, backgroundColor: '#E4E3E5', paddingTop: 10, paddingBottom: 10, marginLeft: 20, marginRight: 20, borderRadius: 50, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.5, shadowRadius: 10, elevation: 5 }}>
+                  <View>
+                    <Text>{match.points}</Text>
+                  </View>
                   <Text style={{ textAlign: 'center', letterSpacing: 3, fontSize: 18 }}>{`${match.user_predictions[0].home_pred}:${match.user_predictions[0].away_pred}`}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: '#E4E3E5', paddingTop: 10, paddingBottom: 10, marginLeft: 20, marginRight: 20, borderRadius: 50, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.5, shadowRadius: 10, elevation: 5 }}>
                   <Image style={{ height: 30, resizeMode: 'contain', flex: 1 }} source={Live} />
                   <Text style={{ letterSpacing: 3, fontSize: 18, flex: 1 }}>{`${match.live_home_score}:${match.live_away_score}`}</Text>
                 </View>
+              </View>
+              )}
+              {featureMatches.name.includes('Upcoming games:') && (
+              <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10, marginBottom: 10 }}>
+                <View style={{ flex: 1 }} />
+                <View style={{ flexDirection: 'row', justifyContent: 'center', flex: 2, backgroundColor: '#E4E3E5', paddingTop: 10, paddingBottom: 10, marginLeft: 20, marginRight: 20, borderRadius: 50, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.5, shadowRadius: 10, elevation: 5 }}>
+                  <Text style={{ textAlign: 'center', letterSpacing: 3, fontSize: 18 }}>{`${match.user_predictions[0].home_pred}:${match.user_predictions[0].away_pred}`}</Text>
+                </View>
+                <View style={{ flex: 1 }} />
               </View>
               )}
             </View>
