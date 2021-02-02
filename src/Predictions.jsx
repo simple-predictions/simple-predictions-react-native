@@ -12,6 +12,7 @@ import {
 } from './Predictions/predictionsSlice';
 import Dollar from '../assets/dollar.png';
 import Padlock from '../assets/padlock.png';
+import { selectColorScheme } from './ColorScheme/colorSchemeSlice';
 
 const Predictions = () => {
   const userPredictions = useSelector(selectUserPredictions);
@@ -22,6 +23,7 @@ const Predictions = () => {
   const [submitEnabled, setSubmitEnabled] = useState(true);
   const [successMessage, setSuccessMessage] = useState();
   const dispatch = useDispatch();
+  const colorScheme = useSelector(selectColorScheme);
 
   const [formData, setFormData] = useState([]);
 
@@ -71,7 +73,7 @@ const Predictions = () => {
   });
 
   return (
-    <ScrollView style={{ backgroundColor: '#323232' }}>
+    <ScrollView style={{ backgroundColor: colorScheme.background }}>
       { successMessage && (
       <Text
         style={{
@@ -93,9 +95,9 @@ const Predictions = () => {
         flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 20, marginTop: 10,
       }}
       >
-        <Icon color={selectorDisabled ? 'gray' : 'white'} disabledStyle={styles.arrowButtonDisabled} name="arrow-left" size={50} disabled={!!selectorDisabled} onPress={() => dispatch(getPredictions(gameweek - 1))} />
-        <Text style={[styles.gameweekText, { color: selectorDisabled ? 'gray' : 'white' }]}>{`Gameweek ${gameweek}`}</Text>
-        <Icon color={selectorDisabled ? 'gray' : 'white'} disabledStyle={styles.arrowButtonDisabled} name="arrow-right" size={50} disabled={!!selectorDisabled} onPress={() => dispatch(getPredictions(gameweek + 1))} />
+        <Icon color={selectorDisabled ? 'gray' : colorScheme.secondary} disabledStyle={styles.arrowButtonDisabled} name="arrow-left" size={50} disabled={!!selectorDisabled} onPress={() => dispatch(getPredictions(gameweek - 1))} />
+        <Text style={[styles.gameweekText, { color: selectorDisabled ? 'gray' : colorScheme.secondary }]}>{`Gameweek ${gameweek}`}</Text>
+        <Icon color={selectorDisabled ? 'gray' : colorScheme.secondary} disabledStyle={styles.arrowButtonDisabled} name="arrow-right" size={50} disabled={!!selectorDisabled} onPress={() => dispatch(getPredictions(gameweek + 1))} />
       </View>
       <View className="col-lg-8 right-col">
         {userPredictions.map((match) => {
@@ -117,6 +119,7 @@ const Predictions = () => {
 };
 
 const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
+  const colorScheme = useSelector(selectColorScheme);
   const month = [];
   month[0] = 'January';
   month[1] = 'February';
@@ -141,74 +144,103 @@ const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
       borderRadius: 10,
       margin: 5,
       fontSize: (18),
-      backgroundColor: 'white',
+      backgroundColor: colorScheme.fourth,
     },
     predictionCircle: {
-      width: 70,
-      height: 70,
+      width: 80,
+      height: 80,
+      top: -10,
+      left: -10,
       borderRadius: 50,
-      backgroundColor: '#defc5f',
       position: 'absolute',
       zIndex: -1,
+      backgroundColor: '#E4E3E5',
+      shadowColor: 'black',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 10,
+      elevation: 5,
     },
-    scoreContainer: {
+    matchContainer: {
       flex: 3,
       justifyContent: 'center',
-      backgroundColor: '#defc5f',
+      backgroundColor: 'white',
       borderRadius: 10,
-      marginRight: 10,
-      marginLeft: 10,
+      marginRight: 20,
+      marginLeft: 20,
+      margin: 10,
+      paddingBottom: 10,
+      shadowColor: 'black',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 10,
+      elevation: 5,
     },
   });
 
   const [bankerEnabled, setBankerEnabled] = useState(!!match.user_predictions[0].banker);
   const [insuranceEnabled, setInsuranceEnabled] = useState(!!match.user_predictions[0].insurance);
-  const [homePred, setHomePred] = useState((parseInt(match.user_predictions[0].home_pred, 10) || '').toString());
-  const [awayPred, setAwayPred] = useState((parseInt(match.user_predictions[0].away_pred, 10) || '').toString());
-
+  const [homePred, setHomePred] = useState(Number.isInteger(parseInt(match.user_predictions[0].home_pred, 10)) ? match.user_predictions[0].home_pred.toString() : '');
+  const [awayPred, setAwayPred] = useState(Number.isInteger(parseInt(match.user_predictions[0].away_pred, 10)) ? match.user_predictions[0].away_pred.toString() : '');
+  const kickOffTimeStr = `${kickOffTime.getDate()} ${month[kickOffTime.getMonth()]} ${kickOffTime.getHours()}:${(`0${kickOffTime.getMinutes()}`).slice(-2)}`;
   return (
-    // eslint-disable-next-line no-underscore-dangle
-    <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 50 }} className="outer-container" key={match._id}>
-      <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }} className="home-team-container">
-        <Image alt="home club badge" className="club-badge" style={{ height: 50, width: 50, resizeMode: 'contain' }} source={Badges[match.home_team.replace(/\s+/g, '')]} />
-        <View style={styles.predictionCircle} />
+    <View style={styles.matchContainer}>
+      <View style={{ marginTop: 10 }}>
+        <Text style={{ textAlign: 'center', fontSize: 14, fontFamily: 'Montserrat-400' }}>
+          {kickOffTimeStr}
+        </Text>
       </View>
-      <View style={styles.scoreContainer}>
-        <View style={{ marginTop: 10 }}>
-          <Text style={{ textAlign: 'center', fontSize: 14 }}>
-            {kickOffTime.getDate()}
-            {' '}
-            {month[kickOffTime.getMonth()]}
-            {' '}
-            {kickOffTime.getHours()}
-            :
-            {(`0${kickOffTime.getMinutes()}`).slice(-2)}
+      <View style={{ flexDirection: 'row', marginTop: 30 }}>
+        <View style={{ flex: 1, alignItems: 'center' }}>
+          <View>
+            <View style={styles.predictionCircle} />
+            <Image style={{ height: 60, width: 60, resizeMode: 'contain' }} source={Badges[match.home_team.replaceAll(' ', '')]} />
+          </View>
+          <Text style={{
+            color: colorScheme.secondary, fontSize: 15, padding: 10, flex: 1, textAlign: 'center', marginTop: 10, fontFamily: 'Montserrat-400',
+          }}
+          >
+            {match.home_team}
           </Text>
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-          {/* eslint-disable-next-line no-underscore-dangle */}
-          <TextInput style={[styles.predInput, { backgroundColor: match.locked ? '#C5D6CF' : 'white' }]} keyboardType="number-pad" editable={!match.locked} value={homePred} onChangeText={(text) => { setHomePred(text); updateFormData(match._id, 'home', text); }} />
-          <Text>-</Text>
-          {/* eslint-disable-next-line no-underscore-dangle */}
-          <TextInput style={[styles.predInput, { backgroundColor: match.locked ? '#C5D6CF' : 'white' }]} keyboardType="number-pad" editable={!match.locked} value={awayPred} onChangeText={(text) => { setAwayPred(text); updateFormData(match._id, 'away', text); }} />
-        </View>
-        <View style={{
-          flexDirection: 'row', justifyContent: 'center', marginBottom: 10, marginTop: 5,
-        }}
-        >
-          {/* eslint-disable-next-line no-underscore-dangle */}
-          <TouchableHighlight disabled={!!match.locked} type="button" style={{ opacity: bankerEnabled ? 1 : 0.3, height: 30, width: 30 }} onPress={() => { updateFormData(match._id, 'banker', !bankerEnabled); setBankerEnabled(!bankerEnabled); }}>
-            <Image style={{ height: 30, width: 30 }} source={Dollar} />
-          </TouchableHighlight>
-          {/* eslint-disable-next-line no-underscore-dangle */}
-          <TouchableHighlight disabled={!!match.locked} type="button" style={{ opacity: insuranceEnabled ? 1 : 0.3, height: 30, width: 30 }} onPress={() => { updateFormData(match._id, 'insurance', !insuranceEnabled); setInsuranceEnabled(!insuranceEnabled); }}>
-            <Image style={{ height: 30, width: 30 }} source={Padlock} />
-          </TouchableHighlight>
+        <View style={{ flex: 1, alignItems: 'center' }}>
+          <View>
+            <View style={styles.predictionCircle} />
+            <Image style={{ height: 60, width: 60, resizeMode: 'contain' }} source={Badges[match.away_team.replaceAll(' ', '')]} />
+          </View>
+          <Text style={{
+            color: colorScheme.secondary, fontSize: 15, padding: 10, flex: 1, textAlign: 'center', marginTop: 10, fontFamily: 'Montserrat-400',
+          }}
+          >
+            {match.away_team}
+          </Text>
         </View>
       </View>
-      <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }} className="away-team-container">
-        <Image alt="away club badge" className="club-badge" style={{ height: 50, width: 50, resizeMode: 'contain' }} source={Badges[match.away_team.replace(/\s+/g, '')]} />
-        <View style={styles.predictionCircle} />
+      <View>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row' }}>
+            {/* eslint-disable-next-line no-underscore-dangle */}
+            <TextInput style={[styles.predInput, { backgroundColor: match.locked ? '#C5D6CF' : 'white' }]} keyboardType="number-pad" editable={!match.locked} value={homePred} onChangeText={(text) => { setHomePred(text); updateFormData(match._id, 'home', text); }} />
+          </View>
+          <View style={{
+            flexDirection: 'row', justifyContent: 'center', marginBottom: 10, marginTop: 5, flex: 1,
+          }}
+          >
+            {/* eslint-disable-next-line no-underscore-dangle */}
+            <TouchableHighlight disabled={!!match.locked} type="button" style={{ opacity: bankerEnabled ? 1 : 0.3, height: 30, width: 30 }} onPress={() => { updateFormData(match._id, 'banker', !bankerEnabled); setBankerEnabled(!bankerEnabled); }}>
+              <Image style={{ height: 30, width: 30 }} source={Dollar} />
+            </TouchableHighlight>
+            {/* eslint-disable-next-line no-underscore-dangle */}
+            <TouchableHighlight disabled={!!match.locked} type="button" style={{ opacity: insuranceEnabled ? 1 : 0.3, height: 30, width: 30 }} onPress={() => { updateFormData(match._id, 'insurance', !insuranceEnabled); setInsuranceEnabled(!insuranceEnabled); }}>
+              <Image style={{ height: 30, width: 30 }} source={Padlock} />
+            </TouchableHighlight>
+          </View>
+
+          <View style={{ flex: 1, justifyContent: 'flex-start', flexDirection: 'row' }}>
+            {/* eslint-disable-next-line no-underscore-dangle */}
+            <TextInput style={[styles.predInput, { backgroundColor: match.locked ? '#C5D6CF' : 'white' }]} keyboardType="number-pad" editable={!match.locked} value={awayPred} onChangeText={(text) => { setAwayPred(text); updateFormData(match._id, 'away', text); }} />
+          </View>
+        </View>
       </View>
     </View>
   );
