@@ -90,7 +90,6 @@ const MiniLeagueTable = () => {
           style={{
             backgroundColor: '#defc5f', margin: 10, padding: 10, borderRadius: 10,
           }}
-          // eslint-disable-next-line no-underscore-dangle
           key={match._id}
         >
           <Text style={{ textAlign: 'center' }}>{`${match.home_team} vs ${match.away_team}`}</Text>
@@ -176,7 +175,6 @@ const MiniLeagueSelector = ({ navigation }) => {
     >
       {minileagues.map((minileague, idx) => (
         <View
-          // eslint-disable-next-line no-underscore-dangle
           key={minileague._id}
           style={{
             backgroundColor: '#defc5f', width: '100%', marginTop: 20, borderRadius: 15,

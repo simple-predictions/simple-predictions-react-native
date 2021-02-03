@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Text, TouchableHighlight, View, Button, TextInput, Image, ScrollView, StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+  Button,
+  TextInput,
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -32,7 +40,6 @@ const Predictions = () => {
       {
         home_pred: match.user_predictions[0].home_pred,
         away_pred: match.user_predictions[0].away_pred,
-        // eslint-disable-next-line no-underscore-dangle
         game_id: match._id,
         banker: match.user_predictions[0].banker || false,
         insurance: match.user_predictions[0].insurance || false,
@@ -105,7 +112,6 @@ const Predictions = () => {
           return (
             <PredictionRow
               updateFormData={updateFormData}
-              // eslint-disable-next-line no-underscore-dangle
               key={match._id}
               kickOffTime={kickOffTime}
               match={match}
@@ -136,15 +142,15 @@ const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
 
   const styles = StyleSheet.create({
     predInput: {
-      height: (40),
-      width: (40),
+      height: 30,
+      width: 30,
       textAlign: 'center',
-      borderColor: 'black',
+      borderColor: 'transparent',
       borderWidth: 1,
       borderRadius: 10,
       margin: 5,
       fontSize: (18),
-      backgroundColor: colorScheme.fourth,
+      backgroundColor: '#C5D6CF',
     },
     predictionCircle: {
       width: 80,
@@ -218,27 +224,82 @@ const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
       </View>
       <View>
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-          <View style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row' }}>
-            {/* eslint-disable-next-line no-underscore-dangle */}
-            <TextInput style={[styles.predInput, { backgroundColor: match.locked ? '#C5D6CF' : 'white' }]} keyboardType="number-pad" editable={!match.locked} value={homePred} onChangeText={(text) => { setHomePred(text); updateFormData(match._id, 'home', text); }} />
+          <View style={{ flex: 1, justifyContent: match.locked ? 'center' : 'flex-end', flexDirection: 'row' }}>
+            {/* -underscore-dangle */}
+            <View style={{ flexDirection: 'row', backgroundColor: '#e8e8e8', borderRadius: 10 }}>
+              {!match.locked && (
+              <TouchableWithoutFeedback
+                onPress={() => { setHomePred((parseInt(homePred, 10) - 1 || 0).toString()); updateFormData(match._id, 'home', (parseInt(homePred, 10) - 1 || 0).toString()); }}
+              >
+                <View style={{
+                  backgroundColor: '#6e6e6e', margin: 5, width: 30, justifyContent: 'center', alignItems: 'center', borderRadius: 10,
+                }}
+                >
+                  <Text style={{ fontSize: 20, color: 'white' }}>-</Text>
+                </View>
+              </TouchableWithoutFeedback>
+              )}
+              <TextInput style={[styles.predInput, { backgroundColor: match.locked ? '#C5D6CF' : 'white' }]} keyboardType="number-pad" editable={!match.locked} value={homePred} onChangeText={(text) => { setHomePred(text); updateFormData(match._id, 'home', text); }} />
+              {!match.locked && (
+              <TouchableWithoutFeedback
+                onPress={() => { setHomePred((parseInt(homePred, 10) + 1 || 0).toString()); updateFormData(match._id, 'home', (parseInt(homePred, 10) + 1 || 0).toString()); }}
+              >
+                <View style={{
+                  backgroundColor: '#6e6e6e', margin: 5, width: 30, justifyContent: 'center', alignItems: 'center', borderRadius: 10,
+                }}
+                >
+                  <Text style={{ fontSize: 20, color: 'white' }}>+</Text>
+                </View>
+              </TouchableWithoutFeedback>
+              )}
+            </View>
           </View>
           <View style={{
-            flexDirection: 'row', justifyContent: 'center', marginBottom: 10, marginTop: 5, flex: 1,
+            flexDirection: 'row', justifyContent: 'center', marginBottom: 10, marginTop: 5,
           }}
           >
-            {/* eslint-disable-next-line no-underscore-dangle */}
+            {/* -underscore-dangle */}
+            {(!match.locked || (match.locked && bankerEnabled)) && (
             <TouchableHighlight disabled={!!match.locked} type="button" style={{ opacity: bankerEnabled ? 1 : 0.3, height: 30, width: 30 }} onPress={() => { updateFormData(match._id, 'banker', !bankerEnabled); setBankerEnabled(!bankerEnabled); }}>
               <Image style={{ height: 30, width: 30 }} source={Dollar} />
             </TouchableHighlight>
-            {/* eslint-disable-next-line no-underscore-dangle */}
+            )}
+            {/* -underscore-dangle */}
+            {(!match.locked || (match.locked && insuranceEnabled)) && (
             <TouchableHighlight disabled={!!match.locked} type="button" style={{ opacity: insuranceEnabled ? 1 : 0.3, height: 30, width: 30 }} onPress={() => { updateFormData(match._id, 'insurance', !insuranceEnabled); setInsuranceEnabled(!insuranceEnabled); }}>
               <Image style={{ height: 30, width: 30 }} source={Padlock} />
             </TouchableHighlight>
+            )}
           </View>
 
-          <View style={{ flex: 1, justifyContent: 'flex-start', flexDirection: 'row' }}>
-            {/* eslint-disable-next-line no-underscore-dangle */}
-            <TextInput style={[styles.predInput, { backgroundColor: match.locked ? '#C5D6CF' : 'white' }]} keyboardType="number-pad" editable={!match.locked} value={awayPred} onChangeText={(text) => { setAwayPred(text); updateFormData(match._id, 'away', text); }} />
+          <View style={{ flex: 1, justifyContent: match.locked ? 'center' : 'flex-start', flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row', backgroundColor: '#e8e8e8', borderRadius: 10 }}>
+              {!match.locked && (
+              <TouchableWithoutFeedback
+                onPress={() => { setAwayPred((parseInt(awayPred, 10) - 1 || 0).toString()); updateFormData(match._id, 'away', (parseInt(awayPred, 10) - 1 || 0).toString()); }}
+              >
+                <View style={{
+                  backgroundColor: '#6e6e6e', margin: 5, width: 30, justifyContent: 'center', alignItems: 'center', borderRadius: 10,
+                }}
+                >
+                  <Text style={{ fontSize: 20, color: 'white' }}>-</Text>
+                </View>
+              </TouchableWithoutFeedback>
+              )}
+              <TextInput style={[styles.predInput, { backgroundColor: match.locked ? '#C5D6CF' : 'white' }]} keyboardType="number-pad" editable={!match.locked} value={awayPred} onChangeText={(text) => { setAwayPred(text); updateFormData(match._id, 'away', text); }} />
+              {!match.locked && (
+              <TouchableWithoutFeedback
+                onPress={() => { setAwayPred((parseInt(awayPred, 10) + 1 || 0).toString()); updateFormData(match._id, 'away', (parseInt(awayPred, 10) + 1 || 0).toString()); }}
+              >
+                <View style={{
+                  backgroundColor: '#6e6e6e', margin: 5, width: 30, justifyContent: 'center', alignItems: 'center', borderRadius: 10,
+                }}
+                >
+                  <Text style={{ fontSize: 20, color: 'white' }}>+</Text>
+                </View>
+              </TouchableWithoutFeedback>
+              )}
+            </View>
           </View>
         </View>
       </View>

@@ -35,7 +35,6 @@ const FeatureMatch = ({ match, name }) => {
 
   return (
     <View
-      // eslint-disable-next-line no-underscore-dangle
       key={match._id}
       style={{
         backgroundColor: colorScheme.fourth, marginTop: 10, marginBottom: 10, padding: 10, paddingTop: 40, borderRadius: 10, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 10, elevation: 5, alignItems: 'center',
@@ -134,6 +133,7 @@ FeatureMatch.propTypes = {
     away_team: PropTypes.string,
     live_home_score: PropTypes.number,
     live_away_score: PropTypes.number,
+    _id: PropTypes.string,
   }).isRequired,
 };
 
@@ -175,7 +175,6 @@ const Homepage = () => {
         }}
         >
           {featureMatches.matches.map((match) => (
-            // eslint-disable-next-line no-underscore-dangle
             <FeatureMatch key={match._id} name={featureMatches.name} match={match} />
           ))}
         </View>
