@@ -65,7 +65,7 @@ const MiniLeagueRankings = () => {
         }}
         >
           <Text style={{
-            color: 'white', margin: 20, textAlign: 'center', fontFamily: 'Montserrat-400', fontSize: 16,
+            color: colorScheme.secondary, margin: 20, textAlign: 'center', fontFamily: 'Montserrat-400', fontSize: 16,
           }}
           >
             {`Ask your friends to join your mini-league - name: ${name}`}
@@ -150,7 +150,7 @@ const MiniLeagueTable = () => {
         }}
         >
           <Text style={{
-            color: 'white', margin: 20, textAlign: 'center', fontFamily: 'Montserrat-400', fontSize: 16,
+            color: colorScheme.secondary, margin: 20, textAlign: 'center', fontFamily: 'Montserrat-400', fontSize: 16,
           }}
           >
             {`Ask your friends to join your mini-league - name: ${name}`}

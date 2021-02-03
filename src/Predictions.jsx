@@ -111,7 +111,7 @@ const Predictions = () => {
         <Text style={[styles.gameweekText, { color: selectorDisabled ? 'gray' : colorScheme.secondary }]}>{`Gameweek ${gameweek}`}</Text>
         <Icon color={selectorDisabled ? 'gray' : colorScheme.secondary} disabledStyle={styles.arrowButtonDisabled} name="arrow-right" size={50} disabled={!!selectorDisabled} onPress={() => dispatch(getPredictions(gameweek + 1))} />
       </View>
-      <View className="col-lg-8 right-col">
+      <View style={{ paddingBottom: 80 }}>
         {userPredictions.map((match) => {
           const kickOffTime = new Date(match.kick_off_time);
           return (

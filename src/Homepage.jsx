@@ -192,7 +192,7 @@ const Homepage = () => {
         </View>
       </View>
       )}
-      <View style={{ marginBottom: 20 }}>
+      <View style={{ marginBottom: 70 }}>
         <Text style={{
           color: colorScheme.secondary, fontFamily: 'Montserrat-700', fontSize: 25, marginTop: 15, marginBottom: 15, paddingRight: 20, paddingLeft: 20,
         }}
