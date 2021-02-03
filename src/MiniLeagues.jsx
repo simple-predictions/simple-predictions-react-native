@@ -13,6 +13,7 @@ import {
   selectSelectedMinileaguePreds,
   selectSelectedMinileagueName,
 } from './MiniLeagues/minileaguesSlice';
+import { selectColorScheme } from './ColorScheme/colorSchemeSlice';
 
 const Stack = createStackNavigator();
 
@@ -168,9 +169,11 @@ const SingleMiniLeague = () => {
 const MiniLeagueSelector = ({ navigation }) => {
   const dispatch = useDispatch();
   const minileagues = useSelector(selectAllMinileagues);
+  const colorScheme = useSelector(selectColorScheme);
+
   return (
     <View style={{
-      flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: '#323232', borderWidth: 0,
+      flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: colorScheme.background, borderWidth: 0,
     }}
     >
       {minileagues.map((minileague, idx) => (
@@ -193,21 +196,25 @@ MiniLeagueSelector.propTypes = {
   }).isRequired,
 };
 
-const MiniLeagues = () => (
-  <Stack.Navigator>
-    <Stack.Screen options={{ headerTintColor: 'white', headerStyle: { backgroundColor: '#323232', borderWidth: 0 } }} name="Mini Leagues List" component={MiniLeagueSelector} />
-    <Stack.Screen
-      options={({ route }) => ({
-        title: route.params.name,
-        headerTintColor: 'white',
-        headerStyle: { backgroundColor: '#323232', borderWidth: 0 },
-        headerBackTitle: 'Back',
-      })}
-      name="SinglePage"
-      component={SingleMiniLeague}
-      screen
-    />
-  </Stack.Navigator>
-);
+const MiniLeagues = () => {
+  const colorScheme = useSelector(selectColorScheme);
+
+  return (
+    <Stack.Navigator>
+      <Stack.Screen options={{ headerTintColor: colorScheme.secondary, headerStyle: { backgroundColor: colorScheme.background, borderWidth: 0 } }} name="Mini Leagues List" component={MiniLeagueSelector} />
+      <Stack.Screen
+        options={({ route }) => ({
+          title: route.params.name,
+          headerTintColor: 'white',
+          headerStyle: { backgroundColor: '#323232', borderWidth: 0 },
+          headerBackTitle: 'Back',
+        })}
+        name="SinglePage"
+        component={SingleMiniLeague}
+        screen
+      />
+    </Stack.Navigator>
+  );
+};
 
 export default MiniLeagues;

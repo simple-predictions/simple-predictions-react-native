@@ -27,11 +27,12 @@ const LoggedInNav = () => {
           inactiveTintColor: 'black',
           activeTintColor: '#E70F0B',
           style: {
-            backgroundColor: '#F3F3F3', height: 60, borderTopColor: 'transparent', shadowColor: 'transparent',
+            backgroundColor: '#e3e3e3', height: 60, borderTopColor: 'transparent', shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 10, elevation: 5, margin: 10, borderRadius: 50, position: 'absolute',
           },
           tabStyle: { borderRadius: 15, margin: 2 },
         }}
         lazy={false}
+        sceneContainerStyle={{ backgroundColor: 'black' }}
       >
         <Tab.Screen
           options={{

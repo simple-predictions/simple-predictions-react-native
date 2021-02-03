@@ -11,6 +11,8 @@ import { selectFeatureMatches } from './Scoring/scoringSlice';
 import { selectColorScheme } from './ColorScheme/colorSchemeSlice';
 import Badges from './ImageLoader';
 import Live from '../assets/live.png';
+import Dollar from '../assets/dollar.png';
+import Padlock from '../assets/padlock.png';
 
 const FeatureMatch = ({ match, name }) => {
   const [userPredStr, setUserPredStr] = useState(`${match.user_predictions[0].home_pred}:${match.user_predictions[0].away_pred}`);
@@ -53,6 +55,10 @@ const FeatureMatch = ({ match, name }) => {
             {match.home_team}
           </Text>
         </View>
+        {match.user_predictions[0].banker
+        && <Image style={{ height: 30, width: 30 }} source={Dollar} />}
+        {match.user_predictions[0].insurance
+        && <Image style={{ height: 30, width: 30 }} source={Padlock} />}
         <View style={{ flex: 1, alignItems: 'center' }}>
           <View>
             <View style={styles.teamBackgroundCircle} />
@@ -128,6 +134,8 @@ FeatureMatch.propTypes = {
       home_pred: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       away_pred: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       points: PropTypes.number,
+      banker: PropTypes.bool,
+      insurance: PropTypes.bool,
     })),
     home_team: PropTypes.string,
     away_team: PropTypes.string,

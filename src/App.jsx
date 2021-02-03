@@ -59,7 +59,7 @@ const App = () => {
   Appearance.addChangeListener(handleDarkModeUpdate);
 
   return (
-    <View style={{ height: '100%', width: '100%' }}>
+    <View style={{ height: '100%', width: '100%', backgroundColor: 'transparent' }}>
       {fontsLoaded
       && (firstOpenVisible
         ? <FirstOpen setFirstOpenVisible={setFirstOpenVisible} />
