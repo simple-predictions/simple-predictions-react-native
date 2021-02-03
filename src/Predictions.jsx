@@ -255,7 +255,7 @@ const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
             </View>
           </View>
           <View style={{
-            flexDirection: 'row', justifyContent: 'center', marginBottom: 10, marginTop: 5,
+            flexDirection: 'row', justifyContent: 'center', marginBottom: 10, marginTop: 5, marginLeft: 5, marginRight: 5,
           }}
           >
             {/* -underscore-dangle */}
