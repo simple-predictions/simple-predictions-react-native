@@ -18,14 +18,21 @@ import { selectColorScheme } from './ColorScheme/colorSchemeSlice';
 const Stack = createStackNavigator();
 
 const MiniLeagueRankings = () => {
+  const colorScheme = useSelector(selectColorScheme);
+
   const styles = StyleSheet.create({
     rankingsRow: {
       flexDirection: 'row',
-      backgroundColor: '#defc5f',
-      margin: 10,
+      backgroundColor: colorScheme.fifth,
+      margin: 15,
       padding: 10,
       borderRadius: 10,
       justifyContent: 'center',
+      shadowColor: 'black',
+      shadowOffset: { width: 2, height: 1 },
+      shadowOpacity: 0.25,
+      shadowRadius: 10,
+      elevation: 5,
     },
     rankingsRowCol: {
       flex: 1,
@@ -36,7 +43,7 @@ const MiniLeagueRankings = () => {
   const name = useSelector(selectSelectedMinileagueName);
 
   return (
-    <ScrollView style={{ backgroundColor: '#323232', minHeight: '100%' }}>
+    <ScrollView style={{ backgroundColor: colorScheme.background, minHeight: '100%', paddingTop: 10 }}>
       {rankings.length > 1 ? (
         <View>
           <View style={styles.rankingsRow}>
@@ -72,6 +79,7 @@ const MiniLeagueRankings = () => {
 const MiniLeagueTable = () => {
   const table = useSelector(selectSelectedMinileaguePreds);
   const name = useSelector(selectSelectedMinileagueName);
+  const colorScheme = useSelector(selectColorScheme);
 
   const styles = StyleSheet.create({
     scoringCircle: {
@@ -85,11 +93,11 @@ const MiniLeagueTable = () => {
   });
 
   return (
-    <ScrollView style={{ backgroundColor: '#323232', flex: 1 }}>
+    <ScrollView style={{ backgroundColor: colorScheme.background, flex: 1, marginBottom: 70 }}>
       {table.members.length > 1 ? table.matches.map((match) => (
         <View
           style={{
-            backgroundColor: '#defc5f', margin: 10, padding: 10, borderRadius: 10,
+            backgroundColor: colorScheme.fifth, margin: 20, padding: 10, borderRadius: 10, shadowColor: 'black', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.25, shadowRadius: 10, elevation: 5,
           }}
           key={match._id}
         >
@@ -155,10 +163,11 @@ const MiniLeagueTable = () => {
 
 const SingleMiniLeague = () => {
   const Tab = createMaterialTopTabNavigator();
+  const colorScheme = useSelector(selectColorScheme);
 
   return (
     <View style={{ flex: 1 }}>
-      <Tab.Navigator tabBarOptions={{ style: { backgroundColor: '#323232' }, activeTintColor: 'white' }} initialLayout={{ width: Dimensions.get('window').width }}>
+      <Tab.Navigator tabBarOptions={{ style: { backgroundColor: colorScheme.background }, activeTintColor: colorScheme.secondary }} initialLayout={{ width: Dimensions.get('window').width }}>
         <Tab.Screen name="Rankings" component={MiniLeagueRankings} />
         <Tab.Screen name="Table" component={MiniLeagueTable} />
       </Tab.Navigator>
@@ -172,20 +181,28 @@ const MiniLeagueSelector = ({ navigation }) => {
   const colorScheme = useSelector(selectColorScheme);
 
   return (
-    <View style={{
-      flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: colorScheme.background, borderWidth: 0,
-    }}
-    >
-      {minileagues.map((minileague, idx) => (
-        <View
-          key={minileague._id}
-          style={{
-            backgroundColor: '#defc5f', width: '100%', marginTop: 20, borderRadius: 15,
-          }}
-        >
-          <Button color="black" title={minileague.name} onPress={() => { navigation.navigate('SinglePage', { idx, name: minileague.name }); dispatch(updateSelectedIdx(idx)); }} />
-        </View>
-      ))}
+    <View style={{ height: '100%' }}>
+      <View style={{
+        justifyContent: 'center', flexDirection: 'row', alignItems: 'center', marginTop: 30,
+      }}
+      >
+        <Text style={{ fontFamily: 'Montserrat-400', fontSize: 25 }}>Mini-leagues</Text>
+      </View>
+      <View style={{
+        flex: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 100, padding: 20, backgroundColor: colorScheme.background, borderWidth: 0,
+      }}
+      >
+        {minileagues.map((minileague, idx) => (
+          <View
+            key={minileague._id}
+            style={{
+              backgroundColor: '#c4c4c4', width: '100%', marginTop: 20, borderRadius: 15, shadowColor: 'black', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 10, elevation: 5,
+            }}
+          >
+            <Button color="black" title={minileague.name} onPress={() => { navigation.navigate('SinglePage', { idx, name: minileague.name }); dispatch(updateSelectedIdx(idx)); }} />
+          </View>
+        ))}
+      </View>
     </View>
   );
 };
@@ -201,12 +218,12 @@ const MiniLeagues = () => {
 
   return (
     <Stack.Navigator>
-      <Stack.Screen options={{ headerTintColor: colorScheme.secondary, headerStyle: { backgroundColor: colorScheme.background, borderWidth: 0 } }} name="Mini Leagues List" component={MiniLeagueSelector} />
+      <Stack.Screen options={{ headerShown: false, headerTintColor: colorScheme.secondary, headerStyle: { backgroundColor: colorScheme.background, borderWidth: 0 } }} name="Mini Leagues List" component={MiniLeagueSelector} />
       <Stack.Screen
         options={({ route }) => ({
           title: route.params.name,
-          headerTintColor: 'white',
-          headerStyle: { backgroundColor: '#323232', borderWidth: 0 },
+          headerTintColor: colorScheme.secondary,
+          headerStyle: { backgroundColor: colorScheme.background, borderColor: 'transparent' },
           headerBackTitle: 'Back',
         })}
         name="SinglePage"

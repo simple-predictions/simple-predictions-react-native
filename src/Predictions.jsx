@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Text,
   TouchableHighlight,
@@ -13,6 +13,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Icon } from 'react-native-elements';
+import { useScrollToTop } from '@react-navigation/native';
 import Badges from './ImageLoader';
 import handleSubmit from './Logic/PredictionsLogic';
 import {
@@ -34,6 +35,10 @@ const Predictions = () => {
   const colorScheme = useSelector(selectColorScheme);
 
   const [formData, setFormData] = useState([]);
+
+  const ref = useRef(null);
+
+  useScrollToTop(ref);
 
   useEffect(() => {
     const userPredsSimple = userPredictions.map((match) => (
@@ -80,7 +85,7 @@ const Predictions = () => {
   });
 
   return (
-    <ScrollView style={{ backgroundColor: colorScheme.background }}>
+    <ScrollView style={{ backgroundColor: colorScheme.background }} ref={ref}>
       { successMessage && (
       <Text
         style={{

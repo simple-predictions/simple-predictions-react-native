@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Text, View, Button, ScrollView, Image, StyleSheet, Pressable,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useScrollToTop } from '@react-navigation/native';
 import { selectAllMinileaguesUserPosition } from './MiniLeagues/minileaguesSlice';
 import { selectUserTotalPoints, selectUserUsername } from './User/userSlice';
 import { selectFeatureMatches } from './Scoring/scoringSlice';
@@ -152,9 +152,13 @@ const Homepage = () => {
   const featureMatches = useSelector(selectFeatureMatches);
   const navigation = useNavigation();
   const colorScheme = useSelector(selectColorScheme);
+  const ref = useRef(null);
+
+  useScrollToTop(ref);
 
   return (
     <ScrollView
+      ref={ref}
       contentContainerStyle={{ flexGrow: 1 }}
       style={{
         flex: 1, backgroundColor: colorScheme.background,

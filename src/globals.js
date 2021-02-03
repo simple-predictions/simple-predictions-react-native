@@ -14,6 +14,7 @@ export const lightColorScheme = {
   secondary: 'black',
   third: '#F3F3F3',
   fourth: 'white',
+  fifth: '#E4E3E5',
 };
 
 // eslint-disable-next-line import/prefer-default-export
