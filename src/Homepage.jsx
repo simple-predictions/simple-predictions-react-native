@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Text, View, Button, ScrollView, Image, StyleSheet, Pressable,
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { selectAllMinileaguesUserPosition } from './MiniLeagues/minileaguesSlice';
@@ -111,15 +112,30 @@ const FeatureMatch = ({ match, name }) => {
           onPressOut={() => setTimeout(() => setUserPredStr(`${match.user_predictions[0].home_pred}:${match.user_predictions[0].away_pred}`), 1000)}
         >
           <View>
-              <Text style={{ textAlign: 'center', letterSpacing: 3, fontSize: 18 }}>{userPredStr}</Text>
+            <Text style={{ textAlign: 'center', letterSpacing: 3, fontSize: 18 }}>{userPredStr}</Text>
           </View>
         </Pressable>
         <View style={{ flex: 1 }} />
       </View>
       )}
     </View>
-  )
-}
+  );
+};
+
+FeatureMatch.propTypes = {
+  name: PropTypes.string.isRequired,
+  match: PropTypes.shape({
+    user_predictions: PropTypes.arrayOf(PropTypes.shape({
+      home_pred: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      away_pred: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      points: PropTypes.number,
+    })),
+    home_team: PropTypes.string,
+    away_team: PropTypes.string,
+    live_home_score: PropTypes.number,
+    live_away_score: PropTypes.number,
+  }).isRequired,
+};
 
 const Homepage = () => {
   const username = useSelector(selectUserUsername);
@@ -158,7 +174,10 @@ const Homepage = () => {
           backgroundColor: colorScheme.third, paddingTop: 10, paddingBottom: 10, borderRadius: 15,
         }}
         >
-          {featureMatches.matches.map((match) => <FeatureMatch name={featureMatches.name} match={match} />)}
+          {featureMatches.matches.map((match) => (
+            // eslint-disable-next-line no-underscore-dangle
+            <FeatureMatch key={match._id} name={featureMatches.name} match={match} />
+          ))}
         </View>
       </View>
       )}
