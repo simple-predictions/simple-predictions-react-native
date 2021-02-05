@@ -130,3 +130,4 @@ PredictionRow.propTypes = {
 };
 
 export default Scoring;
+
