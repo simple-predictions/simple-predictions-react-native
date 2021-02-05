@@ -2,11 +2,13 @@ import React, { useRef, useState } from 'react';
 import {
   Text, View, ScrollView, StyleSheet,
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useScrollToTop } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
-import { selectScoredMatches, selectScoringStatus, selectSelectedGameweek } from './Scoring/scoringSlice';
+import {
+  getScoredPreds, selectScoredMatches, selectScoringStatus, selectSelectedGameweek,
+} from './Scoring/scoringSlice';
 import { selectColorScheme } from './ColorScheme/colorSchemeSlice';
 import GameweekPicker from './GameweekPicker';
 import MatchCardTeams from './MatchCardTeams';
@@ -32,9 +34,11 @@ const Scoring = () => {
   useScrollToTop(ref);
 
   const [selected, setSelected] = useState(0);
+  const dispatch = useDispatch();
 
-  function handleChange(index) {
+  function handleChange(value, index) {
     setSelected(index);
+    dispatch(getScoredPreds([value]));
   }
 
   return (
@@ -44,11 +48,11 @@ const Scoring = () => {
         <View style={{ width: '100%', alignItems: 'center' }}>
           <Picker
             selectedValue={friends[selected]}
-            onValueChange={(value, index) => handleChange(index)}
+            onValueChange={handleChange}
             style={{ height: 100, width: 100 }}
             itemStyle={{ height: 100 }}
           >
-            {friends.map((friend) => <Picker.Item label={friend} value={friend} />)}
+            {friends.map((friend) => <Picker.Item key={friend} label={friend} value={friend} />)}
           </Picker>
         </View>
         <View style={{ paddingBottom: 80 }}>
@@ -110,6 +114,7 @@ const PredictionRow = ({ match }) => {
   return (
     <View style={styles.matchContainer}>
       <MatchCardTeams match={match} kickOffTimeStr={kickOffTimeStr} />
+      <Text>{`${match.user_predictions[0].home_pred} - ${match.user_predictions[0].away_pred}`}</Text>
     </View>
   );
 };
@@ -117,6 +122,10 @@ const PredictionRow = ({ match }) => {
 PredictionRow.propTypes = {
   match: PropTypes.shape({
     kick_off_time: PropTypes.string,
+    user_predictions: PropTypes.arrayOf(PropTypes.shape({
+      home_pred: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      away_pred: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    })),
   }).isRequired,
 };
 
