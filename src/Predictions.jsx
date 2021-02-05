@@ -10,18 +10,18 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Icon } from 'react-native-elements';
 import { useScrollToTop } from '@react-navigation/native';
-import Badges from './ImageLoader';
 import handleSubmit from './Logic/PredictionsLogic';
 import {
-  selectUserPredictions, selectUserPredictionsGameweek, selectUserPredictionsStatus, getPredictions,
+  selectUserPredictions, selectUserPredictionsGameweek, selectUserPredictionsStatus,
 } from './Predictions/predictionsSlice';
 import Dollar from '../assets/dollar.png';
 import Padlock from '../assets/padlock.png';
 import { selectColorScheme } from './ColorScheme/colorSchemeSlice';
+import GameweekPicker from './GameweekPicker';
+import MatchCardTeams from './MatchCardTeams';
 
 const Predictions = () => {
   const userPredictions = useSelector(selectUserPredictions);
@@ -31,7 +31,6 @@ const Predictions = () => {
   const [selectorDisabled, setSelectorDisabled] = useState(true);
   const [submitEnabled, setSubmitEnabled] = useState(true);
   const [successMessage, setSuccessMessage] = useState();
-  const dispatch = useDispatch();
   const colorScheme = useSelector(selectColorScheme);
 
   const [formData, setFormData] = useState([]);
@@ -74,16 +73,6 @@ const Predictions = () => {
     setSelectorDisabled(true);
   }
 
-  const styles = StyleSheet.create({
-    arrowButtonDisabled: {
-      backgroundColor: 'transparent',
-    },
-    gameweekText: {
-      fontFamily: 'Montserrat-400',
-      fontSize: 25,
-    },
-  });
-
   return (
     <ScrollView style={{ backgroundColor: colorScheme.background }} ref={ref}>
       { successMessage && (
@@ -97,20 +86,7 @@ const Predictions = () => {
           {`${successCount} attempt(s)`}
       </Text>
       )}
-      {/* <DropdownSelector
-        enabled={selectorDisabled}
-        length={38}
-        onValueUpdate={(e) => dispatch(getPredictions(e.target.value))}
-        startingValue={gameweek}
-      /> */}
-      <View style={{
-        flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 20, marginTop: 10,
-      }}
-      >
-        <Icon color={selectorDisabled ? 'gray' : colorScheme.secondary} disabledStyle={styles.arrowButtonDisabled} name="arrow-left" size={50} disabled={!!selectorDisabled} onPress={() => dispatch(getPredictions(gameweek - 1))} />
-        <Text style={[styles.gameweekText, { color: selectorDisabled ? 'gray' : colorScheme.secondary }]}>{`Gameweek ${gameweek}`}</Text>
-        <Icon color={selectorDisabled ? 'gray' : colorScheme.secondary} disabledStyle={styles.arrowButtonDisabled} name="arrow-right" size={50} disabled={!!selectorDisabled} onPress={() => dispatch(getPredictions(gameweek + 1))} />
-      </View>
+      <GameweekPicker selectorDisabled={selectorDisabled} />
       <View style={{ paddingBottom: 80 }}>
         {userPredictions.map((match) => {
           const kickOffTime = new Date(match.kick_off_time);
@@ -130,7 +106,6 @@ const Predictions = () => {
 };
 
 const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
-  const colorScheme = useSelector(selectColorScheme);
   const month = [];
   month[0] = 'January';
   month[1] = 'February';
@@ -196,37 +171,7 @@ const PredictionRow = ({ kickOffTime, match, updateFormData }) => {
   const kickOffTimeStr = `${kickOffTime.getDate()} ${month[kickOffTime.getMonth()]} ${kickOffTime.getHours()}:${(`0${kickOffTime.getMinutes()}`).slice(-2)}`;
   return (
     <View style={styles.matchContainer}>
-      <View style={{ marginTop: 10 }}>
-        <Text style={{ textAlign: 'center', fontSize: 14, fontFamily: 'Montserrat-400' }}>
-          {kickOffTimeStr}
-        </Text>
-      </View>
-      <View style={{ flexDirection: 'row', marginTop: 30 }}>
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          <View>
-            <View style={styles.predictionCircle} />
-            <Image style={{ height: 60, width: 60, resizeMode: 'contain' }} source={Badges[match.home_team.replaceAll(' ', '')]} />
-          </View>
-          <Text style={{
-            color: colorScheme.secondary, fontSize: 15, padding: 10, flex: 1, textAlign: 'center', marginTop: 10, fontFamily: 'Montserrat-400',
-          }}
-          >
-            {match.home_team}
-          </Text>
-        </View>
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          <View>
-            <View style={styles.predictionCircle} />
-            <Image style={{ height: 60, width: 60, resizeMode: 'contain' }} source={Badges[match.away_team.replaceAll(' ', '')]} />
-          </View>
-          <Text style={{
-            color: colorScheme.secondary, fontSize: 15, padding: 10, flex: 1, textAlign: 'center', marginTop: 10, fontFamily: 'Montserrat-400',
-          }}
-          >
-            {match.away_team}
-          </Text>
-        </View>
-      </View>
+      <MatchCardTeams kickOffTimeStr={kickOffTimeStr} match={match} />
       <View>
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
           <View style={{ flex: 1, justifyContent: match.locked ? 'center' : 'flex-end', flexDirection: 'row' }}>

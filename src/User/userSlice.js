@@ -45,6 +45,7 @@ export const userSlice = createSlice({
 
 export const selectLoggedIn = (state) => state.user.loggedIn;
 export const selectFriends = (state) => [{ name: 'Mine' }, ...state.user.friends];
+export const selectFriendsNames = (state) => ['Mine', ...state.user.friends.map((friend) => friend.name)];
 export const selectUserUsername = (state) => state.user.username;
 export const selectUserEmail = (state) => state.user.email;
 export const selectUserTotalPoints = (state) => state.user.totalPoints;

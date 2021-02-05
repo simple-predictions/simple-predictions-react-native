@@ -106,7 +106,7 @@ const MiniLeagueTable = () => {
             backgroundColor: '#323232', alignSelf: 'center', padding: 5, borderRadius: 50, margin: 5,
           }}
           >
-            <Text style={{ textAlign: 'center', color: 'white' }}>{match.live_home_score !== undefined && `${match.live_home_score} - ${match.live_away_score}`}</Text>
+            <Text style={{ textAlign: 'center', color: 'white' }}>{match.live_home_score !== undefined ? `${match.live_home_score} - ${match.live_away_score}` : 'Not kicked off'}</Text>
           </View>
           {table.members.map((member) => {
             let pred = match.predictions.find(
