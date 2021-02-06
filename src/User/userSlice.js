@@ -14,6 +14,21 @@ export const getUserInfo = createAsyncThunk(
   }),
 );
 
+export const setExpoPushToken = createAsyncThunk(
+  'user/setExpoPushToken',
+  async (token) => new Promise(resolve => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+      credentials: 'include',
+    };
+    fetch(`${baseUrl}/setexpopushtoken`, requestOptions).then(() => {
+      resolve({ token });
+    })
+  })
+)
+
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
@@ -40,6 +55,9 @@ export const userSlice = createSlice({
     [getUserInfo.rejected]: (state) => {
       state.loggedIn = false;
     },
+    [setExpoPushToken.fulfilled]: (state, action) => {
+      state.expoPushToken = action.payload.token;
+    }
   },
 });
 

@@ -38,7 +38,7 @@ const MatchCardTeams = ({ kickOffTimeStr, match }) => {
         <View style={{ flex: 1, alignItems: 'center' }}>
           <View>
             <View style={styles.predictionCircle} />
-            <Image style={{ height: 60, width: 60, resizeMode: 'contain' }} source={Badges[match.home_team.replaceAll(' ', '')]} />
+            <Image style={{ height: 60, width: 60, resizeMode: 'contain' }} source={Badges[match.home_team.replace(/\s/g, '')]} />
           </View>
           <Text style={{
             color: colorScheme.secondary, fontSize: 15, padding: 10, flex: 1, textAlign: 'center', marginTop: 10, fontFamily: 'Montserrat-400',
@@ -50,7 +50,7 @@ const MatchCardTeams = ({ kickOffTimeStr, match }) => {
         <View style={{ flex: 1, alignItems: 'center' }}>
           <View>
             <View style={styles.predictionCircle} />
-            <Image style={{ height: 60, width: 60, resizeMode: 'contain' }} source={Badges[match.away_team.replaceAll(' ', '')]} />
+            <Image style={{ height: 60, width: 60, resizeMode: 'contain' }} source={Badges[match.away_team.replace(/\s/g, '')]} />
           </View>
           <Text style={{
             color: colorScheme.secondary, fontSize: 15, padding: 10, flex: 1, textAlign: 'center', marginTop: 10, fontFamily: 'Montserrat-400',
