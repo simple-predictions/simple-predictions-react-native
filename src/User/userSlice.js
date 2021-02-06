@@ -16,7 +16,7 @@ export const getUserInfo = createAsyncThunk(
 
 export const setExpoPushToken = createAsyncThunk(
   'user/setExpoPushToken',
-  async (token) => new Promise(resolve => {
+  async (token) => new Promise((resolve) => {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
