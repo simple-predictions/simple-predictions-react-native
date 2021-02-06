@@ -25,9 +25,9 @@ export const setExpoPushToken = createAsyncThunk(
     };
     fetch(`${baseUrl}/setexpopushtoken`, requestOptions).then(() => {
       resolve({ token });
-    })
-  })
-)
+    });
+  }),
+);
 
 export const userSlice = createSlice({
   name: 'user',
@@ -57,7 +57,7 @@ export const userSlice = createSlice({
     },
     [setExpoPushToken.fulfilled]: (state, action) => {
       state.expoPushToken = action.payload.token;
-    }
+    },
   },
 });
 

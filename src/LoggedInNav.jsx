@@ -3,6 +3,8 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import * as Linking from 'expo-linking';
+import * as Notifications from 'expo-notifications';
 import MiniLeagues from './MiniLeagues';
 import Predictions from './Predictions';
 import Scoring from './Scoring';
@@ -11,8 +13,6 @@ import questionMark from '../assets/question-mark.png';
 import homeIcon from '../assets/home.png';
 import correct from '../assets/correct.png';
 import trophy from '../assets/trophy.png';
-import * as Linking from 'expo-linking';
-import * as Notifications from 'expo-notifications';
 import { getPredictions } from './Predictions/predictionsSlice';
 
 const LoggedInNav = () => {
@@ -25,21 +25,20 @@ const LoggedInNav = () => {
         prefixes: ['saltbeef://'],
         config: {
           screens: {
-            Predictions: 'predictions'
-          }
+            Predictions: 'predictions',
+          },
         },
         subscribe(listener) {
           const onReceiveURL = ({ url }) => listener(url);
 
           Linking.addEventListener('url', onReceiveURL);
 
-          const subscription = Notifications.addNotificationResponseReceivedListener(response => {
-            const gameweek = response.notification.request.content.data.gameweek;
-            const url = response.notification.request.content.data.url;
+          const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
+            const { gameweek } = response.notification.request.content.data;
+            const { url } = response.notification.request.content.data;
 
             // Any custom logic to see whether the URL needs to be handled
-            //...
-            dispatch(getPredictions(gameweek))
+            dispatch(getPredictions(gameweek));
 
             // Let React Navigation handle the URL
             listener(url);
@@ -50,7 +49,7 @@ const LoggedInNav = () => {
             Linking.removeEventListener('url', onReceiveURL);
             subscription.remove();
           };
-        }
+        },
       }}
     >
       <Tab.Navigator

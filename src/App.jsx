@@ -8,7 +8,8 @@ import { useFonts, ShareTechMono_400Regular } from '@expo-google-fonts/share-tec
 // eslint-disable-next-line camelcase
 import { Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import PropTypes from 'prop-types';
-import { getUserInfo, selectLoggedIn } from './User/userSlice';
+import * as Notifications from 'expo-notifications';
+import { getUserInfo, selectLoggedIn, setExpoPushToken } from './User/userSlice';
 import FirstOpen from './FirstOpen';
 import Login from './Login';
 import LoggedInNav from './LoggedInNav';
@@ -17,8 +18,6 @@ import { getMinileagues } from './MiniLeagues/minileaguesSlice';
 import { getScoredPreds } from './Scoring/scoringSlice';
 import { setColorScheme } from './ColorScheme/colorSchemeSlice';
 import { darkColorScheme, lightColorScheme } from './globals';
-import * as Notifications from 'expo-notifications';
-import { setExpoPushToken } from './User/userSlice';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -70,21 +69,10 @@ const App = () => {
         finalStatus = status;
       }
       if (finalStatus !== 'granted') {
-        console.log('Failed to get push token for push notification!');
         return;
       }
       const token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
       dispatch(setExpoPushToken(token));
-    
-      if (Platform.OS === 'android') {
-        Notifications.setNotificationChannelAsync('default', {
-          name: 'default',
-          importance: Notifications.AndroidImportance.MAX,
-          vibrationPattern: [0, 250, 250, 250],
-          lightColor: '#FF231F7C',
-        });
-      }
     }
 
     getPush();
