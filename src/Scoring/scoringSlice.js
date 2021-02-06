@@ -44,10 +44,10 @@ export const scoringSlice = createSlice({
   name: 'scoring',
   initialState: {
     selectedUser: 'Mine',
-    selectedGameweek: 22,
+    selectedGameweek: 0,
     matches: {},
     status: 'idle',
-    currentGameweek: 22,
+    currentGameweek: 0,
   },
   reducers: {},
   extraReducers: {
